@@ -69,7 +69,7 @@ public final class ServerPool {
 
                 if (remaining.decrementAndGet() == 0 && completed.compareAndSet(false, true)) {
                     String message = anyReachableServer.get()
-                            ? "Usuário ou senha inválidos. Confira os dados e tente novamente."
+                            ? "Usuário ou senha não está funcionando. Confira os dados e tente novamente."
                             : "Não foi possível conectar aos servidores Akira. Verifique sua internet e tente novamente.";
                     MAIN.post(() -> callback.onError(message));
                 }

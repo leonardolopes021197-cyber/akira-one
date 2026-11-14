@@ -18,6 +18,7 @@ public final class Prefs {
     private static final String RECENTS_KEY = "watch_recents_json";
     private static final String PLAYBACK_KEY = "playback_progress_json";
     private static final String SERIES_PROGRESS_KEY = "series_progress_json";
+    private static final String FAVORITES_KEY = "favorites_by_account_json";
 
     // Quatro servidores/DNS embutidos no APK. O usuário não precisa digitá-los.
     private static final String[] EMBEDDED_SERVERS = new String[]{
@@ -194,7 +195,7 @@ public final class Prefs {
         try {
             if (root.has(item.key())) { root.remove(item.key()); now = false; }
             else { root.put(item.key(), item.toJson()); now = true; }
-            p(c).edit().putString("favorites_json", root.toString()).apply();
+            saveScopedObject(c, FAVORITES_KEY, root);
         } catch (Exception e) { now = false; }
         return now;
     }
@@ -211,9 +212,27 @@ public final class Prefs {
         return out;
     }
 
+    /** Favoritos separados por usuário (antes eram um único conjunto para todas as contas). */
     private static JSONObject favoritesObject(Context c) {
-        try { return new JSONObject(p(c).getString("favorites_json", "{}")); }
-        catch (Exception e) { return new JSONObject(); }
+        migrateLegacyFavorites(c);
+        return scopedObject(c, FAVORITES_KEY);
+    }
+
+    /** Os favoritos antigos ficam com a conta que estava ativa na primeira leitura. */
+    private static void migrateLegacyFavorites(Context c) {
+        String legacy = p(c).getString("favorites_json", null);
+        if (legacy == null) return;
+        try {
+            if (!p(c).contains(FAVORITES_KEY)) {
+                JSONObject root = new JSONObject();
+                root.put(accountKey(c), new JSONObject(legacy));
+                p(c).edit().putString(FAVORITES_KEY, root.toString()).remove("favorites_json").apply();
+            } else {
+                p(c).edit().remove("favorites_json").apply();
+            }
+        } catch (Exception e) {
+            p(c).edit().remove("favorites_json").apply();
+        }
     }
 
     // ---------------- Histórico de assistidos ----------------

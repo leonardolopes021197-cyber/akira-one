@@ -1,3 +1,9 @@
+# AKIRA ONE 1.8.2 — Troca de usuário e aviso de login
+
+- Corrigido: ao trocar de usuário, o conteúdo do usuário anterior podia aparecer na conta nova. Causa: uma lista ainda baixando para o usuário antigo era gravada como se fosse do novo. Agora cada download fica preso ao usuário que o pediu, e ao sair/trocar de conta o catálogo (memória, downloads em andamento e arquivos) é limpo.
+- Corrigido: favoritos eram compartilhados entre todos os usuários. Agora cada conta tem os seus (os favoritos antigos ficam com a conta que estava ativa).
+- Login com usuário ou senha que não funcionam: aparece um aviso vermelho "Usuário ou senha não está funcionando", os campos ficam com contorno vermelho e o aviso some ao voltar a digitar. Sem internet, o aviso informa que não foi possível conectar.
+
 # AKIRA ONE 1.8.1 — Compilação automática no GitHub
 
 - Novo arquivo `.github/workflows/build-apk.yml`: ao enviar o projeto para o GitHub, o APK é compilado sozinho (Java 17, Gradle 8.9) e publicado em Releases como `AKIRA_ONE_v<versão>.apk`.

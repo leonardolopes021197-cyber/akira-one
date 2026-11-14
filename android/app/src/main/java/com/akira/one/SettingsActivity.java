@@ -95,6 +95,7 @@ public class SettingsActivity extends BaseActivity {
     }
 
     private void changeUser() {
+        CatalogCache.clearAll(this);
         Prefs.clearActivation(this);
         Prefs.saveLists(this, null);
         Intent i = new Intent(this, LoginActivity.class);

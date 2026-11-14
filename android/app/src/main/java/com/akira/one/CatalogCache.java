@@ -27,6 +27,8 @@ public final class CatalogCache {
     private static final ExecutorService IO = Executors.newFixedThreadPool(3);
     private static final Map<String, Entry> MEMORY = new ConcurrentHashMap<>();
     private static final Set<String> IN_FLIGHT = ConcurrentHashMap.newKeySet();
+    // Sobe a cada limpeza (troca de usuário). Downloads iniciados antes dela são descartados.
+    private static volatile int generation = 0;
 
     private CatalogCache() {}
 
@@ -45,9 +47,10 @@ public final class CatalogCache {
         // Somente categorias são persistidas em disco. Catálogos completos podem
         // conter dezenas de milhares de itens e serializá-los em uma String JSON
         // gigante pode causar OutOfMemoryError em celulares.
+        final String id = identity(app);
         for (String type : new String[]{"live", "movie", "series"}) {
             final String t = type;
-            IO.execute(() -> readDiskIntoMemory(app, t, "categories"));
+            IO.execute(() -> readDiskIntoMemory(app, id, t, "categories"));
         }
     }
 
@@ -110,6 +113,24 @@ public final class CatalogCache {
         return n;
     }
 
+    /**
+     * Esquece tudo (memória, downloads em andamento e arquivos de categorias).
+     * Chamado ao sair/trocar de usuário, para o catálogo da conta anterior
+     * nunca aparecer na conta nova.
+     */
+    public static void clearAll(Context context) {
+        final Context app = context.getApplicationContext();
+        generation = generation + 1;
+        MEMORY.clear();
+        IN_FLIGHT.clear();
+        IO.execute(() -> {
+            try {
+                File[] files = new File(app.getFilesDir(), "catalog_cache").listFiles();
+                if (files != null) for (File f : files) f.delete();
+            } catch (Exception ignored) {}
+        });
+    }
+
     public static boolean isCategoriesFresh(Context context, String type) {
         return isFresh(context, type, "categories");
     }
@@ -119,11 +140,11 @@ public final class CatalogCache {
     }
 
     public static void saveCategories(Context context, String type, JSONArray data) {
-        save(context, type, "categories", data);
+        save(context, identity(context.getApplicationContext()), type, "categories", data);
     }
 
     public static void saveContent(Context context, String type, JSONArray data) {
-        save(context, type, "content", data);
+        save(context, identity(context.getApplicationContext()), type, "content", data);
     }
 
     private static boolean isFresh(Context context, String type, String kind) {
@@ -138,28 +159,40 @@ public final class CatalogCache {
 
     private static void preloadCategories(Context app, String type, boolean force) {
         if (!force && isCategoriesFresh(app, type)) return;
-        String flight = memoryKey(app, type, "categories");
+        // O usuário é fixado aqui, no início do download. Se a conta trocar antes dele
+        // terminar, o resultado continua sendo do usuário que o pediu (ou é descartado).
+        final String id = identity(app);
+        final int gen = generation;
+        final String flight = memoryKey(id, type, "categories");
         if (!IN_FLIGHT.add(flight)) return;
         XtreamClient.getCategories(app, type, new XtreamClient.ArrayCallback() {
             @Override public void onSuccess(JSONArray array) {
+                if (gen != generation) return;
                 IN_FLIGHT.remove(flight);
-                saveCategories(app, type, array);
+                save(app, id, type, "categories", array);
             }
-            @Override public void onError(Exception error) { IN_FLIGHT.remove(flight); }
+            @Override public void onError(Exception error) {
+                if (gen == generation) IN_FLIGHT.remove(flight);
+            }
         });
     }
 
     private static void preloadContent(Context app, String type, boolean force) {
         if (!force && isContentFresh(app, type)) return;
-        String flight = memoryKey(app, type, "content");
+        final String id = identity(app);
+        final int gen = generation;
+        final String flight = memoryKey(id, type, "content");
         if (!IN_FLIGHT.add(flight)) return;
 
         XtreamClient.ArrayCallback cb = new XtreamClient.ArrayCallback() {
             @Override public void onSuccess(JSONArray array) {
+                if (gen != generation) return;
                 IN_FLIGHT.remove(flight);
-                saveContent(app, type, array);
+                save(app, id, type, "content", array);
             }
-            @Override public void onError(Exception error) { IN_FLIGHT.remove(flight); }
+            @Override public void onError(Exception error) {
+                if (gen == generation) IN_FLIGHT.remove(flight);
+            }
         };
 
         if ("movie".equals(type)) XtreamClient.getMovies(app, cb);
@@ -167,24 +200,24 @@ public final class CatalogCache {
         else XtreamClient.getLive(app, cb);
     }
 
-    private static void save(Context context, String type, String kind, JSONArray data) {
+    private static void save(Context context, String identity, String type, String kind, JSONArray data) {
         if (data == null) return;
         Context app = context.getApplicationContext();
         long now = System.currentTimeMillis();
-        MEMORY.put(memoryKey(app, type, kind), new Entry(data, now));
+        MEMORY.put(memoryKey(identity, type, kind), new Entry(data, now));
 
         // Catálogos completos (canais/filmes/séries) ficam somente em memória.
         // O antigo root.toString() criava uma segunda cópia gigantesca do
         // catálogo e podia estourar o heap do Android.
         if ("content".equals(kind)) {
-            deleteLegacyDiskCache(app, type, kind);
+            deleteLegacyDiskCache(app, identity, type, kind);
             return;
         }
 
         // Categorias são pequenas e podem ser persistidas com segurança.
         IO.execute(() -> {
             try {
-                File target = file(app, type, kind);
+                File target = file(app, identity, type, kind);
                 File dir = target.getParentFile();
                 if (dir != null && !dir.exists()) dir.mkdirs();
                 JSONObject root = new JSONObject();
@@ -207,11 +240,11 @@ public final class CatalogCache {
         });
     }
 
-    private static void readDiskIntoMemory(Context context, String type, String kind) {
+    private static void readDiskIntoMemory(Context context, String identity, String type, String kind) {
         if ("content".equals(kind)) return;
-        String key = memoryKey(context, type, kind);
+        String key = memoryKey(identity, type, kind);
         if (MEMORY.containsKey(key)) return;
-        File f = file(context, type, kind);
+        File f = file(context, identity, type, kind);
         if (!f.exists()) return;
         try (FileInputStream in = new FileInputStream(f)) {
             byte[] bytes = new byte[(int) f.length()];
@@ -230,10 +263,10 @@ public final class CatalogCache {
         } catch (Exception ignored) {}
     }
 
-    private static void deleteLegacyDiskCache(Context context, String type, String kind) {
+    private static void deleteLegacyDiskCache(Context context, String identity, String type, String kind) {
         IO.execute(() -> {
             try {
-                File f = file(context, type, kind);
+                File f = file(context, identity, type, kind);
                 if (f.exists()) f.delete();
                 File tmp = new File(f.getAbsolutePath() + ".tmp");
                 if (tmp.exists()) tmp.delete();
@@ -242,13 +275,21 @@ public final class CatalogCache {
     }
 
     private static File file(Context context, String type, String kind) {
+        return file(context, identity(context), type, kind);
+    }
+
+    private static File file(Context context, String identity, String type, String kind) {
         File dir = new File(context.getFilesDir(), "catalog_cache");
-        String name = identity(context) + "_" + safe(type) + "_" + safe(kind) + ".json";
+        String name = identity + "_" + safe(type) + "_" + safe(kind) + ".json";
         return new File(dir, name);
     }
 
     private static String memoryKey(Context context, String type, String kind) {
-        return identity(context) + ":" + type + ":" + kind;
+        return memoryKey(identity(context), type, kind);
+    }
+
+    private static String memoryKey(String identity, String type, String kind) {
+        return identity + ":" + type + ":" + kind;
     }
 
     private static String identity(Context context) {

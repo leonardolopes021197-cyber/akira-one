@@ -1,18 +1,21 @@
 package com.akira.one;
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import androidx.appcompat.app.AppCompatActivity;
+import android.widget.Toast;
 
 public class LoginActivity extends BaseActivity {
     private EditText username;
     private EditText password;
     private TextView loginButton;
     private TextView status;
+    private TextView errorBanner;
     private View progress;
     private boolean loggingIn = false;
 
@@ -33,6 +36,7 @@ public class LoginActivity extends BaseActivity {
         password = findViewById(R.id.loginPass);
         loginButton = findViewById(R.id.loginButton);
         status = findViewById(R.id.loginStatus);
+        errorBanner = findViewById(R.id.loginError);
         progress = findViewById(R.id.loginProgress);
 
         loginButton.setOnClickListener(v -> doLogin());
@@ -52,6 +56,34 @@ public class LoginActivity extends BaseActivity {
         } else {
             username.requestFocus();
         }
+
+        // Ao voltar a digitar, o aviso de erro some e os campos voltam ao normal.
+        TextWatcher clearOnType = new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) { clearError(); }
+            @Override public void afterTextChanged(Editable s) {}
+        };
+        username.addTextChangedListener(clearOnType);
+        password.addTextChangedListener(clearOnType);
+    }
+
+    /** Mostra o aviso vermelho (com tremidinha) e marca os campos com erro. */
+    private void showError(String message) {
+        status.setText("");
+        errorBanner.setText("⚠  " + message);
+        errorBanner.setVisibility(View.VISIBLE);
+        username.setBackgroundResource(R.drawable.bg_input_error);
+        password.setBackgroundResource(R.drawable.bg_input_error);
+        ObjectAnimator.ofFloat(errorBanner, View.TRANSLATION_X, 0f, -14f, 14f, -10f, 10f, -5f, 5f, 0f)
+                .setDuration(420).start();
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+    private void clearError() {
+        if (errorBanner.getVisibility() != View.VISIBLE) return;
+        errorBanner.setVisibility(View.GONE);
+        username.setBackgroundResource(R.drawable.bg_input);
+        password.setBackgroundResource(R.drawable.bg_input);
     }
 
     private void doLogin() {
@@ -59,23 +91,29 @@ public class LoginActivity extends BaseActivity {
         String user = username.getText().toString().trim();
         String pass = password.getText().toString();
         if (user.isBlank() || pass.isBlank()) {
-            status.setText("Informe usuário e senha.");
+            showError("Informe usuário e senha.");
             if (user.isBlank()) username.requestFocus(); else password.requestFocus();
             return;
         }
 
+        clearError();
+        final String previousUser = Prefs.username(this);
         setLoading(true);
+        status.setTextColor(getColor(R.color.akira_muted));
         status.setText("Conectando à Akira...");
         ServerPool.login(this, user, pass, new ServerPool.LoginCallback() {
             @Override public void onSuccess(String serverUrl) {
                 setLoading(false);
+                // Outra conta: esquece o catálogo e os downloads da conta anterior.
+                if (!user.equals(previousUser)) CatalogCache.clearAll(LoginActivity.this);
+                status.setTextColor(getColor(R.color.akira_green));
                 status.setText("✓ Acesso liberado");
                 openLoading();
             }
 
             @Override public void onError(String message) {
                 setLoading(false);
-                status.setText(message);
+                showError(message);
                 password.requestFocus();
                 password.selectAll();
             }
