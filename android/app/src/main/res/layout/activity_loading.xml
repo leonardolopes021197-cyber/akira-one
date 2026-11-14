@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_app"
+    android:keepScreenOn="true">
+
+    <LinearLayout
+        android:layout_width="360dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/loadingLogo"
+            android:layout_width="match_parent"
+            android:layout_height="104dp"
+            android:contentDescription="Akira TV"
+            android:scaleType="centerInside"
+            android:src="@drawable/akira_brand" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="Preparando sua lista"
+            android:textColor="@color/akira_text"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/loadingStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:gravity="center"
+            android:text="Conectando…"
+            android:textColor="@color/akira_muted"
+            android:textSize="14sp" />
+
+        <ProgressBar
+            android:id="@+id/loadingBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:layout_marginTop="22dp"
+            android:indeterminate="false"
+            android:max="600"
+            android:progress="0"
+            android:progressDrawable="@drawable/progress_akira" />
+
+        <TextView
+            android:id="@+id/loadingPercent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="end"
+            android:text="0%"
+            android:textColor="@color/akira_muted"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/loadingSkip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/bg_ghost_btn"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="sans-serif-medium"
+            android:paddingStart="18dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="18dp"
+            android:paddingBottom="8dp"
+            android:text="Continuar sem esperar"
+            android:textColor="#C3CADB"
+            android:textSize="13sp"
+            android:visibility="gone" />
+    </LinearLayout>
+</FrameLayout>

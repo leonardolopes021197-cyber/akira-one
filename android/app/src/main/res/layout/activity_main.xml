@@ -1,0 +1,699 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootMain"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_app"
+    android:keepScreenOn="true">
+
+    <!-- Container que recebe o recuo de notch/câmera (ver MainActivity.applySafeInsets). -->
+    <LinearLayout
+        android:id="@+id/homeContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <!-- ===== MENU LATERAL ===== -->
+        <LinearLayout
+            android:id="@+id/homeSidebar"
+            android:layout_width="190dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_sidebar"
+            android:orientation="vertical"
+            android:paddingStart="14dp"
+            android:paddingTop="12dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="12dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginBottom="8dp"
+                android:contentDescription="Akira"
+                android:scaleType="centerInside"
+                android:src="@drawable/akira_brand" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/navHome"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginBottom="3dp"
+                android:background="@drawable/bg_nav_item"
+                android:clickable="true"
+                android:contentDescription="Início"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="12dp"
+                android:paddingEnd="10dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:duplicateParentState="true"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_home"
+                    android:tint="@color/nav_content" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:duplicateParentState="true"
+                    android:ellipsize="end"
+                    android:fontFamily="sans-serif-medium"
+                    android:maxLines="1"
+                    android:text="Início"
+                    android:textColor="@color/nav_content"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/navLive"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginBottom="3dp"
+                android:background="@drawable/bg_nav_item"
+                android:clickable="true"
+                android:contentDescription="TV ao Vivo"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="12dp"
+                android:paddingEnd="10dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:duplicateParentState="true"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_tv"
+                    android:tint="@color/nav_content" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:duplicateParentState="true"
+                    android:ellipsize="end"
+                    android:fontFamily="sans-serif-medium"
+                    android:maxLines="1"
+                    android:text="TV ao Vivo"
+                    android:textColor="@color/nav_content"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/navMovies"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginBottom="3dp"
+                android:background="@drawable/bg_nav_item"
+                android:clickable="true"
+                android:contentDescription="Filmes"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="12dp"
+                android:paddingEnd="10dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:duplicateParentState="true"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_film"
+                    android:tint="@color/nav_content" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:duplicateParentState="true"
+                    android:ellipsize="end"
+                    android:fontFamily="sans-serif-medium"
+                    android:maxLines="1"
+                    android:text="Filmes"
+                    android:textColor="@color/nav_content"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/navSeries"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginBottom="3dp"
+                android:background="@drawable/bg_nav_item"
+                android:clickable="true"
+                android:contentDescription="Séries"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="12dp"
+                android:paddingEnd="10dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:duplicateParentState="true"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_series"
+                    android:tint="@color/nav_content" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:duplicateParentState="true"
+                    android:ellipsize="end"
+                    android:fontFamily="sans-serif-medium"
+                    android:maxLines="1"
+                    android:text="Séries"
+                    android:textColor="@color/nav_content"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/navFavorites"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginBottom="3dp"
+                android:background="@drawable/bg_nav_item"
+                android:clickable="true"
+                android:contentDescription="Favoritos"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="12dp"
+                android:paddingEnd="10dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:duplicateParentState="true"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_heart"
+                    android:tint="@color/nav_content" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:duplicateParentState="true"
+                    android:ellipsize="end"
+                    android:fontFamily="sans-serif-medium"
+                    android:maxLines="1"
+                    android:text="Favoritos"
+                    android:textColor="@color/nav_content"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/navSettings"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginBottom="3dp"
+                android:background="@drawable/bg_nav_item"
+                android:clickable="true"
+                android:contentDescription="Configurações"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="12dp"
+                android:paddingEnd="10dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:duplicateParentState="true"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_sliders"
+                    android:tint="@color/nav_content" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:duplicateParentState="true"
+                    android:ellipsize="end"
+                    android:fontFamily="sans-serif-medium"
+                    android:maxLines="1"
+                    android:text="Configurações"
+                    android:textColor="@color/nav_content"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- ===== ÁREA PRINCIPAL (rola em telas baixas, preenche em TV) ===== -->
+        <ScrollView
+            android:id="@+id/homeScroll"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:fillViewport="true"
+            android:overScrollMode="never"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingStart="20dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="12dp">
+
+                <!-- Barra superior: título, vencimento, relógio, busca e ajustes -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="sans-serif-medium"
+                        android:text="Início"
+                        android:textColor="@color/akira_text"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/expiryText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/expiry_badge_bg"
+                        android:fontFamily="sans-serif-medium"
+                        android:paddingStart="12dp"
+                        android:paddingTop="6dp"
+                        android:paddingEnd="12dp"
+                        android:paddingBottom="6dp"
+                        android:text="Vencimento: --/--/----"
+                        android:textColor="#E6FFFFFF"
+                        android:textSize="12sp" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="14dp"
+                        android:gravity="end"
+                        android:orientation="vertical">
+
+                        <TextClock
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:format12Hour="HH:mm"
+                            android:format24Hour="HH:mm"
+                            android:textColor="@color/akira_text"
+                            android:textSize="17sp"
+                            android:textStyle="bold" />
+
+                        <TextClock
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:format12Hour="EEE, dd MMM"
+                            android:format24Hour="EEE, dd MMM"
+                            android:textColor="@color/akira_muted"
+                            android:textSize="10sp" />
+                    </LinearLayout>
+
+            <ImageView
+                android:id="@+id/searchButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="14dp"
+                android:background="@drawable/bg_icon_btn"
+                android:clickable="true"
+                android:contentDescription="Pesquisar"
+                android:focusable="true"
+                android:padding="10dp"
+                android:src="@drawable/ic_search"
+                android:stateListAnimator="@animator/focus_scale"
+                android:tint="#FFFFFF" />
+
+            <ImageView
+                android:id="@+id/settingsButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/bg_icon_btn"
+                android:clickable="true"
+                android:contentDescription="Configurações"
+                android:focusable="true"
+                android:padding="10dp"
+                android:src="@drawable/ic_sliders"
+                android:stateListAnimator="@animator/focus_scale"
+                android:tint="#FFFFFF" />
+
+                </LinearLayout>
+
+                <!-- Banner (arte original Akira) -->
+                <ImageView
+                    android:id="@+id/homeHero"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1.1"
+                    android:background="@drawable/bg_round_20"
+                    android:clipToOutline="true"
+                    android:contentDescription="Akira — o melhor conteúdo em um só lugar"
+                    android:minHeight="130dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/akira_hero" />
+
+                <!-- Atalhos principais -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_weight="0.7"
+                    android:minHeight="84dp"
+                    android:orientation="horizontal">
+
+            <FrameLayout
+                android:id="@+id/cardLive"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="12dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_hcard_red"
+                android:clickable="true"
+                android:contentDescription="TV ao Vivo"
+                android:focusable="true"
+                android:foreground="@drawable/ring_focus_18"
+                android:stateListAnimator="@animator/focus_scale">
+
+                <!-- Ícone grande e translúcido ao fundo (só decoração). -->
+                <ImageView
+                    android:layout_width="76dp"
+                    android:layout_height="76dp"
+                    android:layout_gravity="end|bottom"
+                    android:layout_marginEnd="-8dp"
+                    android:layout_marginBottom="-10dp"
+                    android:alpha="0.12"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_tv"
+                    android:tint="#FFFFFF" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="10dp">
+
+                    <FrameLayout
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/bg_circle_soft">
+
+                        <ImageView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:layout_gravity="center"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_tv"
+                            android:tint="#FFFFFF" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:fontFamily="sans-serif-medium"
+                            android:maxLines="1"
+                            android:text="TV AO VIVO"
+                            android:textColor="@color/akira_text"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="1dp"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="Canais de TV"
+                            android:textColor="#C3CADB"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/cardMovies"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="12dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_hcard_blue"
+                android:clickable="true"
+                android:contentDescription="Filmes"
+                android:focusable="true"
+                android:foreground="@drawable/ring_focus_18"
+                android:stateListAnimator="@animator/focus_scale">
+
+                <!-- Ícone grande e translúcido ao fundo (só decoração). -->
+                <ImageView
+                    android:layout_width="76dp"
+                    android:layout_height="76dp"
+                    android:layout_gravity="end|bottom"
+                    android:layout_marginEnd="-8dp"
+                    android:layout_marginBottom="-10dp"
+                    android:alpha="0.12"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_film"
+                    android:tint="#FFFFFF" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="10dp">
+
+                    <FrameLayout
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/bg_circle_soft">
+
+                        <ImageView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:layout_gravity="center"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_film"
+                            android:tint="#FFFFFF" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:fontFamily="sans-serif-medium"
+                            android:maxLines="1"
+                            android:text="FILMES"
+                            android:textColor="@color/akira_text"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="1dp"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="Lançamentos"
+                            android:textColor="#C3CADB"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/cardSeries"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="0dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_hcard_purple"
+                android:clickable="true"
+                android:contentDescription="Séries"
+                android:focusable="true"
+                android:foreground="@drawable/ring_focus_18"
+                android:stateListAnimator="@animator/focus_scale">
+
+                <!-- Ícone grande e translúcido ao fundo (só decoração). -->
+                <ImageView
+                    android:layout_width="76dp"
+                    android:layout_height="76dp"
+                    android:layout_gravity="end|bottom"
+                    android:layout_marginEnd="-8dp"
+                    android:layout_marginBottom="-10dp"
+                    android:alpha="0.12"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_series"
+                    android:tint="#FFFFFF" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="10dp">
+
+                    <FrameLayout
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/bg_circle_soft">
+
+                        <ImageView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:layout_gravity="center"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_series"
+                            android:tint="#FFFFFF" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:fontFamily="sans-serif-medium"
+                            android:maxLines="1"
+                            android:text="SÉRIES"
+                            android:textColor="@color/akira_text"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="1dp"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="Suas séries favoritas"
+                            android:textColor="#C3CADB"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </FrameLayout>
+
+                </LinearLayout>
+
+                <!-- Lançamentos (filmes mais recentes do catálogo) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_weight="1.0"
+                    android:minHeight="190dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="32dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="Lançamentos"
+                            android:textColor="@color/akira_text"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/moviesAllButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_ghost_btn"
+                            android:clickable="true"
+                            android:contentDescription="Ver todos os filmes"
+                            android:focusable="true"
+                            android:fontFamily="sans-serif-medium"
+                            android:paddingStart="12dp"
+                            android:paddingTop="4dp"
+                            android:paddingEnd="12dp"
+                            android:paddingBottom="4dp"
+                            android:text="Ver todos  ›"
+                            android:textColor="#C3CADB"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/launchRecycler"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:clipToPadding="false"
+                            android:orientation="horizontal"
+                            android:overScrollMode="never"
+                            android:paddingTop="8dp"
+                            android:paddingBottom="8dp" />
+
+                        <TextView
+                            android:id="@+id/launchEmpty"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="Carregando lançamentos…"
+                            android:textColor="@color/akira_muted"
+                            android:textSize="13sp" />
+                    </FrameLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</FrameLayout>

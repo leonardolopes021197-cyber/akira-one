@@ -1,0 +1,59 @@
+# Compila o APK do AKIRA ONE automaticamente no GitHub.
+# Quando roda: a cada envio (push) para main/master, ou manualmente em
+# Actions -> "Compilar APK" -> "Run workflow".
+# Onde fica o APK: aba "Releases" do repositório (download direto) e também
+# em Actions -> execução -> "Artifacts".
+name: Compilar APK
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: write   # necessário para criar a Release com o APK
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v4
+
+      - name: Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      # O projeto não tem gradlew, então instalamos o Gradle (8.9 é o mínimo do AGP 8.7.3).
+      - name: Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.9"
+
+      - name: Compilar (debug)
+        working-directory: android
+        run: gradle assembleDebug --no-daemon --stacktrace
+
+      - name: Nomear o APK com a versão
+        id: apk
+        run: |
+          VERSION=$(grep -oP 'versionName = "\K[^"]+' android/app/build.gradle.kts)
+          mkdir -p dist
+          cp android/app/build/outputs/apk/debug/app-debug.apk "dist/AKIRA_ONE_v${VERSION}.apk"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Guardar como artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: AKIRA_ONE_v${{ steps.apk.outputs.version }}
+          path: dist/*.apk
+
+      - name: Publicar em Releases
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.apk.outputs.version }}
+          name: AKIRA ONE v${{ steps.apk.outputs.version }}
+          files: dist/*.apk

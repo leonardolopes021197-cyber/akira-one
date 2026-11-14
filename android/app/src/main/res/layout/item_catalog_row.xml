@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:layout_marginBottom="5dp"
+    android:background="@drawable/catalog_row_bg"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="8dp"
+    android:paddingEnd="14dp">
+
+    <TextView
+        android:id="@+id/rowNumber"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="1"
+        android:textColor="@color/akira_muted"
+        android:textSize="12sp" />
+
+    <ImageView
+        android:id="@+id/rowIcon"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_marginEnd="12dp"
+        android:background="@drawable/bg_round_10"
+        android:clipToOutline="true"
+        android:contentDescription="Logo ou capa"
+        android:padding="4dp"
+        android:scaleType="centerInside" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/rowName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-medium"
+            android:maxLines="1"
+            android:text="Nome"
+            android:textColor="@color/akira_text"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/rowMeta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="CANAL AO VIVO"
+            android:textColor="@color/akira_muted"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/bg_circle_soft"
+        android:importantForAccessibility="no"
+        android:padding="8dp"
+        android:src="@drawable/ic_play"
+        android:tint="#FFFFFF" />
+</LinearLayout>

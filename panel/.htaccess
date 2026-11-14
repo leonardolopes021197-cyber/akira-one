@@ -1,0 +1,4 @@
+Options -Indexes
+<FilesMatch "^(akira\.sqlite|app\.secret)$">
+  Require all denied
+</FilesMatch>

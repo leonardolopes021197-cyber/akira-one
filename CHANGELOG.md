@@ -1,0 +1,152 @@
+# AKIRA ONE 1.8.1 — Compilação automática no GitHub
+
+- Novo arquivo `.github/workflows/build-apk.yml`: ao enviar o projeto para o GitHub, o APK é compilado sozinho (Java 17, Gradle 8.9) e publicado em Releases como `AKIRA_ONE_v<versão>.apk`.
+- Nenhuma mudança no código do app.
+
+# AKIRA ONE 1.8.0 — Layout moderno
+
+- Home reconstruída em layout nativo: menu lateral com ícones, banner, atalhos TV/Filmes/Séries e relógio. Antes era uma imagem fixa com botões invisíveis por cima.
+- Nova faixa "Lançamentos" com os 16 filmes mais recentes do catálogo do usuário (capas reais, clique abre o filme). Os pôsteres de exemplo da arte antiga foram removidos.
+- Home adapta a celular, TV 720p/1080p e 4K, respeita notch/câmera e rola em telas baixas.
+- Novo sistema visual: fundo com brilho suave, superfícies arredondadas, foco branco com leve zoom para controle remoto, tipografia mais limpa e ícones em linha.
+- Login, Configurações, Busca, Catálogo (TV/Filmes/Séries), listas de episódios e itens de lista redesenhados.
+- Pôsteres do catálogo com cantos arredondados; categorias com contador em chip e destaque de seleção.
+- Arte original da home movida para `design/akira_home_reference.png` (fora do APK); o banner usa `akira_hero.jpg` recortado dela. APK menor (~2,7 MB a menos).
+- Player redesenhado: o nome do canal não fica mais fixo no topo (o topo só mostra avisos temporários como "Conectando…"). Nova barra de controles Akira com degradê, nome e selo AO VIVO, tempo e progresso vermelho, voltar/avançar 10 s, play/pause em destaque e botão HD integrado. Os controles somem sozinhos após 4 s.
+- Diálogos do app (qualidade HD, favoritos, atualização) com fundo escuro arredondado e destaque vermelho.
+- O app agora sempre abre na tela de usuário e senha (com os dados da última sessão já preenchidos). Em modo painel, que não usa login, continua indo direto à home.
+- Nova tela de carregamento após o login: barra de progresso real da atualização de TV ao vivo, Filmes e Séries, com botão "Continuar sem esperar" após 10 s e limite de 60 s (o download termina em segundo plano).
+- Nenhuma mudança nos servidores, no EPG, nos favoritos nem no painel. Todos os IDs de views usados pelo código foram mantidos.
+
+# AKIRA ONE 1.7.10
+
+- Botão HD agora acompanha a visibilidade dos controles do player e some junto com a engrenagem/barra de controles.
+- Mantida troca manual de qualidade e fallback automático da 1.7.9.
+- Tela inicial mostra a data de vencimento da lista no formato dd/MM/yyyy.
+- Vencimento é lido do `exp_date` do Xtream e atualizado silenciosamente ao entrar na home.
+
+# AKIRA ONE 1.7.6
+
+- Removido o sistema de preview dos canais ao vivo.
+- TV ao Vivo voltou ao layout de duas colunas: categorias + canais.
+- Um toque/OK no canal abre diretamente em tela cheia.
+- Seleção de qualidade continua disponível dentro do player em tela cheia pelo botão OK/Enter.
+- Mantido agrupamento de SD/HD/FHD/4K, com HD como padrão quando disponível.
+
+# AKIRA ONE 1.7.1
+
+- Pré-carregamento automático de TV ao Vivo, Filmes e Séries após o login.
+- Cache em memória durante a sessão para abrir os catálogos sem nova espera.
+- Cache persistente no armazenamento interno para acelerar as próximas aberturas.
+- Atualização automática do catálogo em segundo plano a cada 30 minutos.
+- Se a atualização falhar, o aplicativo continua usando o último catálogo salvo.
+
+# 1.5.1
+- Removida completamente a área **Jogos do Dia** do aplicativo Android.
+- Removidos atalho por toque longo, activity, adapters, modelos e layouts de jogos do APK.
+- Histórico, Continuar Assistindo, TV ao Vivo, Filmes e Séries permanecem inalterados.
+- O módulo de jogos do painel PHP foi mantido apenas no painel e não é exposto pelo aplicativo.
+
+# Changelog
+
+## 1.3.0
+- Nova tela inicial AKIRA em 16:9 baseada exatamente na referência visual enviada.
+- Menu lateral interativo: Início, TV ao Vivo, Filmes, Séries, Favoritos e Configurações.
+- Cards centrais TV ao Vivo, Filmes e Séries totalmente clicáveis.
+- Ícones de busca/configurações e área de lançamentos interativos.
+- Navegação preparada para controle remoto com destaque de foco.
+- Tela inicial em modo imersivo e orientação paisagem.
+- Jogos do Dia preservado via toque longo em Início.
+- Mantidos login automático pelos 4 DNS e correções do player 1.2.1.
+
+## 1.2.1
+- Correção da reprodução dos canais ao vivo.
+- Player agora tenta automaticamente `direct_source`, HLS (`.m3u8`), MPEG-TS (`.ts`) e rota sem extensão.
+- Suporte a redirecionamento HTTP ↔ HTTPS no player.
+- User-Agent compatível com servidores que bloqueiam o identificador padrão do ExoPlayer.
+- Leitura do host/porta de reprodução retornado pelo `player_api.php`.
+- Leitura de `allowed_output_formats` do servidor.
+- Adicionado módulo Media3 HLS.
+- Mensagens de conexão/fallback e erro mais claras no player.
+- `versionCode` atualizado para 4.
+
+## 1.2.0
+- Nova tela inicial de login com usuário e senha.
+- Quatro servidores/DNS Akira embutidos no APK.
+- Seleção automática e paralela do primeiro servidor que autenticar.
+- DNS ocultos da interface do cliente.
+- Botão Trocar usuário / Sair nas Configurações.
+- Migração da versão anterior: servidor antigo não embutido força novo login.
+- `versionCode` atualizado para 3.
+
+## 1.1.0
+- DNS direto padrão `http://akiratv.online`.
+- Modo de teste sem painel.
+- Campos de usuário/senha/lista no próprio app.
+- Categorias e filtro de catálogo.
+- Busca global.
+- Favoritos.
+- EPG.
+- Múltiplas listas selecionáveis.
+- Editor de ativações.
+- Logs/auditoria.
+- Adaptadores API-Football e football-data.org.
+- Atualização de APK por version code.
+
+## 1.4.0 — Catálogo em duas colunas
+- TV ao Vivo, Filmes e Séries agora abrem com categorias na coluna esquerda e itens da categoria na coluna direita.
+- Contador de itens por categoria.
+- Ao navegar pelas categorias com o controle remoto, a lista da direita atualiza automaticamente.
+- DPAD Direita entra na lista de conteúdo; DPAD Esquerda retorna para a categoria selecionada.
+- Busca filtra somente a categoria atual.
+- Layout otimizado para TV em 16:9 e orientação horizontal.
+
+## 1.5.0
+- Adiciona "Assistidos recentemente" em TV ao Vivo, Filmes e Séries.
+- Adiciona "Continuar assistindo" para Filmes e Séries.
+- Filmes retomam automaticamente do ponto em que foram interrompidos.
+- Episódios retomam automaticamente do ponto salvo.
+- Registra o último episódio assistido de cada série.
+- Ao reabrir uma série, destaca o último episódio; se ele foi concluído, direciona para o próximo quando disponível.
+- Histórico e progresso ficam separados por usuário.
+- Progresso é salvo periodicamente e também ao sair do player.
+
+## 1.6.0
+- Séries organizadas por temporada, com temporadas na coluna esquerda e episódios na direita.
+- Controle parental para categorias de canais adultos; PIN padrão 0000 e alteração em Configurações.
+- Conteúdo adulto oculto da categoria "Todos" e de "Assistidos recentemente" enquanto bloqueado.
+- Novo visual das listas de TV, Filmes e Séries inspirado em layout de duas colunas escuro/ciano.
+- Filmes e Séries continuam usando grade de capas no painel de conteúdo.
+- Mantidos histórico, continuar assistindo e progresso do último episódio.
+
+## 1.6.1 - Layout responsivo
+- Home preserva a proporção 16:9 sem esticar a arte em telas 18:9, 19.5:9 ou 20:9.
+- Hotspots da home agora acompanham a área real renderizada da imagem.
+- Catálogos usam colunas proporcionais em vez de larguras fixas.
+- Grade de capas calcula automaticamente a quantidade de colunas conforme largura e densidade da tela.
+- Capas preservam proporção vertical e se redimensionam dinamicamente.
+- Tela de temporadas usa proporções responsivas.
+- Login e campos do controle parental deixaram de depender de larguras fixas.
+- Telas principais trabalham em sensorLandscape para manter orientação horizontal consistente.
+
+## 1.7.0
+- TV ao Vivo redesenhada em três áreas: categorias, canais e preview.
+- Preview automático do canal ao focar na lista, com atraso curto para evitar trocas excessivas.
+- Tela cheia somente após confirmar novamente o canal já carregado no preview.
+- EPG e Favoritos disponíveis no painel do preview.
+- Busca independente de categorias e canais na tela de TV ao Vivo.
+
+## 1.7.2
+- Tela cheia real em celulares 16:9, 18:9, 19.5:9, 20:9 e 21:9.
+- Home usa centerCrop responsivo para eliminar letterbox/bordas pretas sem distorcer a arte.
+- Hotspots da home acompanham automaticamente o recorte em qualquer proporção.
+- Todas as telas ocupam as barras/recorte do display em modo imersivo.
+- Todas as Activities abrem forçadamente em paisagem, mesmo com o celular segurado em pé ou rotação automática desativada.
+
+## 1.7.3
+- Agrupamento de canais ao vivo por nome: SD/HD/FHD/4K deixam de aparecer como canais duplicados.
+- O nome exibido remove o sufixo de qualidade (ex.: "ESPN 1 HD" passa a "ESPN 1").
+- Qualidade HD é escolhida por padrão quando disponível; fallback para FHD, 4K, SD ou original.
+- Preview de TV ao vivo ganhou seletor de qualidade.
+- No player em tela cheia, pressionar OK/Enter abre o seletor de qualidade do canal.
+- Troca de qualidade refaz a reprodução sem sair do canal.

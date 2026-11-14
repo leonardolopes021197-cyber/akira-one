@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+    <!-- Os controles vêm de akira_player_controls.xml (visual Akira). -->
+    <androidx.media3.ui.PlayerView
+        android:id="@+id/playerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:controller_layout_id="@layout/akira_player_controls"
+        app:show_buffering="when_playing"
+        app:use_controller="true" />
+
+    <!-- Aviso temporário (Conectando…, Tentando outra rota…). Não mostra o nome do canal.
+         Não captura toques. -->
+    <FrameLayout
+        android:id="@+id/playerOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/playerStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_margin="18dp"
+            android:background="@drawable/bg_glass"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-medium"
+            android:maxLines="1"
+            android:maxWidth="420dp"
+            android:paddingStart="16dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="8dp"
+            android:text="Conectando…"
+            android:textColor="@color/akira_text"
+            android:textSize="14sp"
+            android:visibility="gone" />
+    </FrameLayout>
+</FrameLayout>

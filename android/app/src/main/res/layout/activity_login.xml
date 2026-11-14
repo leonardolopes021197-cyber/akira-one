@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_app"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="28dp">
+
+        <!-- Marca e mensagem -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.15"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingEnd="32dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="96dp"
+                android:contentDescription="Akira TV"
+                android:scaleType="fitStart"
+                android:src="@drawable/akira_brand" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="22dp"
+                android:letterSpacing="0.12"
+                android:text="ENTRETENIMENTO SEM LIMITES"
+                android:textColor="@color/akira_red"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="sans-serif-medium"
+                android:lineSpacingExtra="2dp"
+                android:text="TV ao vivo, filmes e séries em um só lugar."
+                android:textColor="@color/akira_text"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/bg_chip"
+                    android:paddingStart="12dp"
+                    android:paddingTop="6dp"
+                    android:paddingEnd="12dp"
+                    android:paddingBottom="6dp"
+                    android:text="TV ao Vivo"
+                    android:textColor="#DDE4F0"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/bg_chip"
+                    android:paddingStart="12dp"
+                    android:paddingTop="6dp"
+                    android:paddingEnd="12dp"
+                    android:paddingBottom="6dp"
+                    android:text="Filmes"
+                    android:textColor="#DDE4F0"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/bg_chip"
+                    android:paddingStart="12dp"
+                    android:paddingTop="6dp"
+                    android:paddingEnd="12dp"
+                    android:paddingBottom="6dp"
+                    android:text="Séries"
+                    android:textColor="#DDE4F0"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Cartão de acesso -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.9"
+            android:background="@drawable/bg_panel"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:text="Acessar Akira TV"
+                android:textColor="@color/akira_text"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Entre com os dados da sua lista."
+                android:textColor="@color/akira_muted"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/loginUser"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="22dp"
+                android:background="@drawable/bg_input"
+                android:hint="Usuário"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:singleLine="true"
+                android:textColor="@color/akira_text"
+                android:textColorHint="@color/akira_muted"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/loginPass"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_input"
+                android:hint="Senha"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:singleLine="true"
+                android:textColor="@color/akira_text"
+                android:textColorHint="@color/akira_muted"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/loginButton"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:layout_marginTop="22dp"
+                android:background="@drawable/bg_card_red"
+                android:clickable="true"
+                android:focusable="true"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:letterSpacing="0.06"
+                android:text="ENTRAR"
+                android:textColor="@color/akira_text"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <ProgressBar
+                android:id="@+id/loginProgress"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/loginStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center"
+                android:text=""
+                android:textColor="@color/akira_green"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

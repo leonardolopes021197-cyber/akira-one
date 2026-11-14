@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:background="@drawable/bg_poster_cell"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+    <!-- O frame recorta capa e overlay nos cantos arredondados. -->
+    <FrameLayout
+        android:id="@+id/gridPosterFrame"
+        android:layout_width="match_parent"
+        android:layout_height="190dp"
+        android:background="@drawable/bg_round_14"
+        android:clipToOutline="true">
+
+        <ImageView
+            android:id="@+id/gridPoster"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="Capa"
+            android:scaleType="centerCrop" />
+
+        <View
+            android:id="@+id/gridFocusOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#1FFFFFFF"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/gridTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="3dp"
+        android:ellipsize="end"
+        android:fontFamily="sans-serif-medium"
+        android:maxLines="2"
+        android:minLines="1"
+        android:text="Título"
+        android:textColor="@color/akira_text"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/gridMeta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="3dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="Filme"
+        android:textColor="@color/akira_muted"
+        android:textSize="10sp" />
+</LinearLayout>

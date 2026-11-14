@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Degradê escuro embaixo, só aparece junto com os controles. -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/scrim_bottom" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="vertical"
+        android:paddingStart="28dp"
+        android:paddingEnd="28dp"
+        android:paddingBottom="14dp">
+
+        <!-- Nome do conteúdo + selo AO VIVO (some junto com os controles) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/playerControlTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-medium"
+                android:maxLines="1"
+                android:text="Akira"
+                android:textColor="@color/akira_text"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/playerLiveBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:background="@drawable/bg_badge_red"
+                android:fontFamily="sans-serif-medium"
+                android:letterSpacing="0.08"
+                android:paddingStart="10dp"
+                android:paddingTop="3dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="3dp"
+                android:text="AO VIVO"
+                android:textColor="@color/akira_text"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <!-- Tempo e barra de progresso (só filmes e episódios) -->
+        <LinearLayout
+            android:id="@+id/playerTimeRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@id/exo_position"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:includeFontPadding="false"
+                android:text="00:00"
+                android:textColor="@color/akira_text"
+                android:textSize="12sp" />
+
+            <androidx.media3.ui.DefaultTimeBar
+                android:id="@id/exo_progress"
+                android:layout_width="0dp"
+                android:layout_height="28dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                app:bar_height="4dp"
+                app:buffered_color="#66FFFFFF"
+                app:played_color="#FF402F"
+                app:scrubber_color="#FFFFFF"
+                app:scrubber_enabled_size="14dp"
+                app:unplayed_color="#33FFFFFF" />
+
+            <TextView
+                android:id="@id/exo_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:includeFontPadding="false"
+                android:text="00:00"
+                android:textColor="@color/akira_muted"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- Botões: voltar 10s, play/pause, avançar 10s e qualidade (HD) -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="2dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <FrameLayout
+                    android:id="@+id/playerRewWrap"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <FrameLayout
+                        android:id="@id/exo_rew"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/bg_icon_btn"
+                        android:clickable="true"
+                        android:contentDescription="Voltar 10 segundos"
+                        android:focusable="true">
+
+                        <ImageView
+                            android:layout_width="26dp"
+                            android:layout_height="26dp"
+                            android:layout_gravity="center"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_rewind"
+                            android:tint="#FFFFFF" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:fontFamily="sans-serif-medium"
+                            android:includeFontPadding="false"
+                            android:text="10"
+                            android:textColor="@color/akira_text"
+                            android:textSize="8sp"
+                            android:textStyle="bold" />
+                    </FrameLayout>
+                </FrameLayout>
+
+                <ImageButton
+                    android:id="@id/exo_play_pause"
+                    android:layout_width="58dp"
+                    android:layout_height="58dp"
+                    android:layout_marginStart="18dp"
+                    android:layout_marginEnd="18dp"
+                    android:background="@drawable/bg_play_main"
+                    android:contentDescription="Reproduzir ou pausar"
+                    android:padding="15dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_play"
+                    android:stateListAnimator="@animator/focus_scale" />
+
+                <FrameLayout
+                    android:id="@+id/playerFfwdWrap"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <FrameLayout
+                        android:id="@id/exo_ffwd"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/bg_icon_btn"
+                        android:clickable="true"
+                        android:contentDescription="Avançar 10 segundos"
+                        android:focusable="true">
+
+                        <ImageView
+                            android:layout_width="26dp"
+                            android:layout_height="26dp"
+                            android:layout_gravity="center"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_forward"
+                            android:tint="#FFFFFF" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:fontFamily="sans-serif-medium"
+                            android:includeFontPadding="false"
+                            android:text="10"
+                            android:textColor="@color/akira_text"
+                            android:textSize="8sp"
+                            android:textStyle="bold" />
+                    </FrameLayout>
+                </FrameLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/qualityButton"
+                android:layout_width="56dp"
+                android:layout_height="40dp"
+                android:layout_gravity="end|center_vertical"
+                android:background="@drawable/hd_quality_button_bg"
+                android:clickable="true"
+                android:focusable="true"
+                android:fontFamily="sans-serif-medium"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:padding="0dp"
+                android:stateListAnimator="@animator/focus_scale"
+                android:text="HD"
+                android:textAllCaps="true"
+                android:textColor="@color/akira_text"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+        </FrameLayout>
+    </LinearLayout>
+</FrameLayout>

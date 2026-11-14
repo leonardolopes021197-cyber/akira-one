@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.Akira" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:windowBackground">@color/akira_bg</item>
+        <item name="android:colorAccent">@color/akira_red</item>
+        <item name="colorAccent">@color/akira_red</item>
+        <item name="colorPrimary">@color/akira_red</item>
+        <item name="colorPrimaryVariant">@color/akira_red_dark</item>
+        <item name="colorOnPrimary">@color/akira_text</item>
+        <item name="colorSecondary">@color/akira_blue</item>
+        <item name="colorSurface">@color/akira_surface</item>
+        <item name="colorOnSurface">@color/akira_text</item>
+        <item name="android:navigationBarColor">@color/akira_bg</item>
+        <item name="android:statusBarColor">@color/akira_bg</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="alertDialogTheme">@style/ThemeOverlay.Akira.Dialog</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+    </style>
+
+    <!-- Diálogos (qualidade HD, favoritos, atualização...) no visual Akira. -->
+    <style name="ThemeOverlay.Akira.Dialog" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/bg_dialog</item>
+        <item name="colorPrimary">@color/akira_red</item>
+        <item name="colorAccent">@color/akira_red</item>
+        <item name="android:colorAccent">@color/akira_red</item>
+        <item name="android:textColorPrimary">@color/akira_text</item>
+        <item name="android:textColorSecondary">@color/akira_muted</item>
+        <item name="textColorAlertDialogListItem">@color/akira_text</item>
+    </style>
+</resources>

@@ -1,0 +1,5 @@
+<?php
+require_once __DIR__.'/bootstrap.php';require_login();$rows=db()->query('SELECT * FROM audit_logs ORDER BY id DESC LIMIT 300')->fetchAll();$pageTitle='Logs e Auditoria';include __DIR__.'/partials/header.php';
+?>
+<section class="card"><div class="section-title"><h2>Últimas ações administrativas</h2><span class="muted"><?=count($rows)?> registro(s)</span></div><div class="table-wrap"><table><thead><tr><th>Data</th><th>Administrador</th><th>Ação</th><th>Entidade</th><th>Detalhes</th><th>IP</th></tr></thead><tbody><?php if(!$rows):?><tr><td colspan="6" class="empty">Nenhuma ação registrada ainda.</td></tr><?php endif?><?php foreach($rows as $r):?><tr><td><?=h($r['created_at'])?></td><td><?=h($r['admin_user']?:'sistema')?></td><td><span class="code"><?=h($r['action'])?></span></td><td><?=h($r['entity_type'])?> <?=h($r['entity_id'])?></td><td><?=h($r['details'])?></td><td><?=h($r['ip'])?></td></tr><?php endforeach?></tbody></table></div></section>
+<?php include __DIR__.'/partials/footer.php'; ?>

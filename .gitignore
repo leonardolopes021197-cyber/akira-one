@@ -1,0 +1,7 @@
+android/.gradle/
+android/**/build/
+panel/data/*.sqlite
+panel/data/*.sqlite-*
+panel/data/app.secret
+*.apk
+*.aab

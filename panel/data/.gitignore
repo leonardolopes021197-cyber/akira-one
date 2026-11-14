@@ -1,0 +1,6 @@
+*.sqlite
+*.sqlite-*
+app.secret
+!.htaccess
+!index.html
+!.gitignore

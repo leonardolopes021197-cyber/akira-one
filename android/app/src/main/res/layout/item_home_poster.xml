@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="110dp"
+    android:layout_height="match_parent"
+    android:layout_marginEnd="10dp"
+    android:background="@drawable/bg_round_14"
+    android:clickable="true"
+    android:clipToOutline="true"
+    android:focusable="true"
+    android:foreground="@drawable/ring_focus_14"
+    android:stateListAnimator="@animator/focus_scale">
+
+    <ImageView
+        android:id="@+id/homePoster"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="Capa"
+        android:scaleType="centerCrop" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/scrim_bottom" />
+
+    <TextView
+        android:id="@+id/homePosterTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:ellipsize="end"
+        android:fontFamily="sans-serif-medium"
+        android:maxLines="2"
+        android:padding="8dp"
+        android:text="Título"
+        android:textColor="@color/akira_text"
+        android:textSize="11sp"
+        android:textStyle="bold" />
+</FrameLayout>

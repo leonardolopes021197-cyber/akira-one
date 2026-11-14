@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_app"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="40dp"
+        android:paddingTop="24dp"
+        android:paddingEnd="40dp"
+        android:paddingBottom="28dp">
+
+        <!-- Cabeçalho -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="64dp"
+                android:layout_height="52dp"
+                android:contentDescription="Akira"
+                android:scaleType="centerInside"
+                android:src="@drawable/akira_brand" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-medium"
+                android:text="Configurações"
+                android:textColor="@color/akira_text"
+                android:textSize="26sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_panel"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:letterSpacing="0.1"
+                android:text="ACESSO AKIRA"
+                android:textColor="@color/akira_red"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/currentUser"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="Usuário conectado: --"
+                android:textColor="@color/akira_text"
+                android:textSize="17sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Os 4 servidores estão embutidos no app e são testados automaticamente. Nenhum DNS precisa ser digitado pelo cliente."
+                android:textColor="@color/akira_muted"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/changeUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_card_red"
+                android:clickable="true"
+                android:focusable="true"
+                android:fontFamily="sans-serif-medium"
+                android:text="Trocar usuário / Sair"
+                android:textColor="@color/akira_text"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_panel"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:letterSpacing="0.1"
+                android:text="CONTROLE PARENTAL"
+                android:textColor="@color/akira_blue"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Os canais adultos ficam bloqueados por senha. A senha padrão é 0000."
+                android:textColor="@color/akira_muted"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/currentAdultPin"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/bg_input"
+                android:hint="Senha atual"
+                android:inputType="numberPassword"
+                android:maxLength="4"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:singleLine="true"
+                android:textColor="@color/akira_text"
+                android:textColorHint="@color/akira_muted" />
+
+            <EditText
+                android:id="@+id/newAdultPin"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_input"
+                android:hint="Nova senha (4 números)"
+                android:inputType="numberPassword"
+                android:maxLength="4"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:singleLine="true"
+                android:textColor="@color/akira_text"
+                android:textColorHint="@color/akira_muted" />
+
+            <EditText
+                android:id="@+id/confirmAdultPin"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_input"
+                android:hint="Confirmar nova senha"
+                android:inputType="numberPassword"
+                android:maxLength="4"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:singleLine="true"
+                android:textColor="@color/akira_text"
+                android:textColorHint="@color/akira_muted" />
+
+            <TextView
+                android:id="@+id/saveAdultPin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/bg_item"
+                android:clickable="true"
+                android:focusable="true"
+                android:fontFamily="sans-serif-medium"
+                android:padding="14dp"
+                android:text="Alterar senha dos canais adultos"
+                android:textColor="@color/akira_text"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_panel"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:letterSpacing="0.1"
+                android:text="PAINEL ADMINISTRATIVO (OPCIONAL)"
+                android:textColor="@color/akira_blue"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Deixe vazio para usar somente o login direto com os 4 servidores integrados."
+                android:textColor="@color/akira_muted"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/panelUrl"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_input"
+                android:hint="https://seu-dominio.com/akira"
+                android:inputType="textUri"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:singleLine="true"
+                android:textColor="@color/akira_text"
+                android:textColorHint="@color/akira_muted" />
+
+            <TextView
+                android:id="@+id/settingsDeviceId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="ID do dispositivo: --"
+                android:textColor="@color/akira_text"
+                android:textSize="15sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Quando usar o painel, associe este ID a uma ou mais listas."
+                android:textColor="@color/akira_muted"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/saveSettings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="12dp"
+                    android:background="@drawable/bg_card_red"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Salvar"
+                    android:textColor="@color/akira_text"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/testPanel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_item"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:fontFamily="sans-serif-medium"
+                    android:padding="14dp"
+                    android:text="Testar modo"
+                    android:textColor="@color/akira_text"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_panel"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:letterSpacing="0.1"
+                android:text="SOBRE O APLICATIVO"
+                android:textColor="@color/akira_blue"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/appVersionValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="Versão do aplicativo: --"
+                android:textColor="@color/akira_text"
+                android:textSize="17sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="AKIRA ONE • Aplicativo oficial"
+                android:textColor="@color/akira_muted"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/testResult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:text=""
+            android:textColor="@color/akira_green" />
+    </LinearLayout>
+</ScrollView>

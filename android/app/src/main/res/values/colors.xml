@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base -->
+    <color name="akira_bg">#05060A</color>
+    <color name="akira_panel">#0C101B</color>
+    <color name="akira_panel_2">#121827</color>
+    <color name="akira_red">#FF402F</color>
+    <color name="akira_red_dark">#B8221B</color>
+    <color name="akira_blue">#00B8FF</color>
+    <color name="akira_purple">#8A4DFF</color>
+    <color name="akira_green">#22E39A</color>
+    <color name="akira_text">#F7F8FB</color>
+    <color name="akira_muted">#8F9BB3</color>
+    <!-- Design 1.8: superfícies e contornos -->
+    <color name="akira_surface">#0F1320</color>
+    <color name="akira_surface_hi">#1A2033</color>
+    <color name="akira_stroke">#222A3F</color>
+    <color name="akira_focus">#FFFFFF</color>
+</resources>

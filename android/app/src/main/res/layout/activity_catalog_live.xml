@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_app"
+    android:orientation="vertical"
+    android:padding="14dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="54dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="0.18"
+            android:adjustViewBounds="true"
+            android:contentDescription="Akira"
+            android:scaleType="centerInside"
+            android:src="@drawable/akira_brand" />
+
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="0.47"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="TV ao Vivo"
+            android:textColor="@color/akira_text"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/subtitleText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="6dp"
+            android:layout_weight="0.35"
+            android:ellipsize="end"
+            android:gravity="end"
+            android:maxLines="1"
+            android:text="Carregando..."
+            android:textColor="@color/akira_muted"
+            android:textSize="11sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="6dp"
+        android:layout_weight="1"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <!-- CATEGORIAS -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="0.38"
+            android:background="@drawable/catalog_panel_bg"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <EditText
+                android:id="@+id/categorySearch"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/catalog_search_bg"
+                android:drawablePadding="8dp"
+                android:drawableStart="@drawable/ic_search_muted"
+                android:hint="Pesquisar categoria"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:singleLine="true"
+                android:textColor="@color/akira_text"
+                android:textColorHint="#738092"
+                android:textSize="12sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/categoriesRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:clipToPadding="false"
+                android:paddingBottom="6dp" />
+        </LinearLayout>
+
+        <!-- CANAIS -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="0.62"
+            android:background="@drawable/catalog_panel_bg"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <EditText
+                android:id="@+id/catalogSearch"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/catalog_search_bg"
+                android:drawablePadding="8dp"
+                android:drawableStart="@drawable/ic_search_muted"
+                android:hint="Pesquisar canais"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:singleLine="true"
+                android:textColor="@color/akira_text"
+                android:textColorHint="#738092"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/selectedCategoryTitle"
+                android:layout_width="match_parent"
+                android:layout_height="34dp"
+                android:gravity="center_vertical"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingStart="8dp"
+                android:text="Todos"
+                android:textColor="#DDE6EF"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:clipToPadding="false"
+                android:paddingBottom="6dp" />
+        </LinearLayout>
+
+        <!-- PREVIEW -->
+        <LinearLayout
+            android:id="@+id/livePreviewPanel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="0dp"
+            android:layout_weight="0"
+            android:visibility="gone"
+            android:background="@drawable/catalog_panel_bg"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <FrameLayout
+                android:id="@+id/previewFrame"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.46"
+                android:background="#000000">
+
+                <androidx.media3.ui.PlayerView
+                    android:id="@+id/livePreviewPlayer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#000000" />
+
+                <TextView
+                    android:id="@+id/previewHint"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:padding="24dp"
+                    android:text="Selecione um canal para visualizar"
+                    android:textColor="#8C98A6"
+                    android:textSize="14sp" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/previewChannelTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Nenhum canal selecionado"
+                android:textColor="@color/akira_text"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/previewInstruction"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Navegue pelos canais para ver o preview • OK novamente para tela cheia"
+                android:textColor="@color/akira_muted"
+                android:textSize="11sp" />
+
+            <Space
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:layout_weight="0.18" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/previewEpgButton"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="0.24"
+                    android:background="@drawable/preview_button_bg"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:text="EPG"
+                    android:textColor="@color/akira_text"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/previewQualityButton"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="0.30"
+                    android:background="@drawable/preview_button_bg"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="6dp"
+                    android:text="Qualidade HD"
+                    android:textColor="@color/akira_text"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/previewFavoriteButton"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.62"
+                    android:background="@drawable/preview_button_bg"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:text="Adicionar aos favoritos ♡"
+                    android:textColor="@color/akira_text"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
