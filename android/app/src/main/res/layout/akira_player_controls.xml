@@ -121,34 +121,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
-                    <FrameLayout
-                        android:id="@id/exo_rew"
+                    <!-- Texto = segundos (o Media3 preenche sozinho: 10). O ícone vem do fundo. -->
+                    <TextView
+                        android:id="@id/exo_rew_with_amount"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        android:background="@drawable/bg_icon_btn"
+                        android:background="@drawable/bg_seek_back"
                         android:clickable="true"
                         android:contentDescription="Voltar 10 segundos"
-                        android:focusable="true">
-
-                        <ImageView
-                            android:layout_width="26dp"
-                            android:layout_height="26dp"
-                            android:layout_gravity="center"
-                            android:importantForAccessibility="no"
-                            android:src="@drawable/ic_rewind"
-                            android:tint="#FFFFFF" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:fontFamily="sans-serif-medium"
-                            android:includeFontPadding="false"
-                            android:text="10"
-                            android:textColor="@color/akira_text"
-                            android:textSize="8sp"
-                            android:textStyle="bold" />
-                    </FrameLayout>
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:includeFontPadding="false"
+                        android:text="10"
+                        android:textColor="@color/akira_text"
+                        android:textSize="9sp"
+                        android:textStyle="bold" />
                 </FrameLayout>
 
                 <ImageButton
@@ -169,34 +156,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
-                    <FrameLayout
-                        android:id="@id/exo_ffwd"
+                    <!-- Texto = segundos (o Media3 preenche sozinho: 10). O ícone vem do fundo. -->
+                    <TextView
+                        android:id="@id/exo_ffwd_with_amount"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        android:background="@drawable/bg_icon_btn"
+                        android:background="@drawable/bg_seek_forward"
                         android:clickable="true"
                         android:contentDescription="Avançar 10 segundos"
-                        android:focusable="true">
-
-                        <ImageView
-                            android:layout_width="26dp"
-                            android:layout_height="26dp"
-                            android:layout_gravity="center"
-                            android:importantForAccessibility="no"
-                            android:src="@drawable/ic_forward"
-                            android:tint="#FFFFFF" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:fontFamily="sans-serif-medium"
-                            android:includeFontPadding="false"
-                            android:text="10"
-                            android:textColor="@color/akira_text"
-                            android:textSize="8sp"
-                            android:textStyle="bold" />
-                    </FrameLayout>
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:includeFontPadding="false"
+                        android:text="10"
+                        android:textColor="@color/akira_text"
+                        android:textSize="9sp"
+                        android:textStyle="bold" />
                 </FrameLayout>
             </LinearLayout>
 

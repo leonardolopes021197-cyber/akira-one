@@ -10,8 +10,8 @@ android {
         applicationId = "com.akira.one"
         minSdk = 23
         targetSdk = 35
-        versionCode = 27
-        versionName = "1.8.2"
+        versionCode = 28
+        versionName = "1.8.3"
     }
 
     buildTypes {

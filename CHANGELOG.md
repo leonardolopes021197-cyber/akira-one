@@ -1,3 +1,8 @@
+# AKIRA ONE 1.8.3 — Corrige o player que fechava ao abrir
+
+- Corrigido: ao abrir um canal, filme ou episódio o app fechava (erro "Error inflating class" em activity_player). Os botões de voltar/avançar 10 s da barra nova eram de um tipo que o Media3 não aceita; agora usam o formato oficial da biblioteca, e o número (10) é preenchido por ela.
+- Troca de conta: o catálogo, os downloads em andamento e os arquivos da conta anterior agora são limpos em qualquer caminho que mude o usuário (login, Sair, troca de lista/perfil), não só no login.
+
 # AKIRA ONE 1.8.2 — Troca de usuário e aviso de login
 
 - Corrigido: ao trocar de usuário, o conteúdo do usuário anterior podia aparecer na conta nova. Causa: uma lista ainda baixando para o usuário antigo era gravada como se fosse do novo. Agora cada download fica preso ao usuário que o pediu, e ao sair/trocar de conta o catálogo (memória, downloads em andamento e arquivos) é limpo.

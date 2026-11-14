@@ -101,6 +101,13 @@ public final class Prefs {
 
     public static void saveActivation(Context c, String baseUrl, String username, String password, String listName) {
         String server = trim(baseUrl);
+        // Conta diferente da que estava ativa (login, trocar de lista/perfil...):
+        // esquece o catálogo da conta anterior para ele nunca aparecer na nova.
+        String previousUser = username(c);
+        String newUser = username == null ? "" : username.trim();
+        if (!previousUser.isEmpty() && !previousUser.equals(newUser)) {
+            CatalogCache.clearAll(c);
+        }
         p(c).edit()
                 .putString("server_url", server)
                 .putString("username", username == null ? "" : username.trim())
