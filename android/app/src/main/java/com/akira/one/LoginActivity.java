@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -37,6 +39,20 @@ public class LoginActivity extends BaseActivity {
         loginButton = findViewById(R.id.loginButton);
         status = findViewById(R.id.loginStatus);
         errorBanner = findViewById(R.id.loginError);
+
+        // ID do aparelho no canto (usado para associar a lista no painel).
+        ((TextView) findViewById(R.id.loginDeviceId)).setText("ID: " + DeviceIdentity.get(this));
+
+        // Alterna entre ver e ocultar a senha (ajuda muito a digitar com o controle remoto).
+        final TextView showPass = findViewById(R.id.loginShowPass);
+        showPass.setOnClickListener(v -> {
+            boolean hidden = password.getTransformationMethod() instanceof PasswordTransformationMethod;
+            password.setTransformationMethod(hidden
+                    ? HideReturnsTransformationMethod.getInstance()
+                    : PasswordTransformationMethod.getInstance());
+            password.setSelection(password.getText().length());
+            showPass.setText(hidden ? "OCULTAR SENHA" : "MOSTRAR SENHA");
+        });
         progress = findViewById(R.id.loginProgress);
 
         loginButton.setOnClickListener(v -> doLogin());
@@ -82,8 +98,8 @@ public class LoginActivity extends BaseActivity {
     private void clearError() {
         if (errorBanner.getVisibility() != View.VISIBLE) return;
         errorBanner.setVisibility(View.GONE);
-        username.setBackgroundResource(R.drawable.bg_input);
-        password.setBackgroundResource(R.drawable.bg_input);
+        username.setBackgroundResource(R.drawable.bg_input_login);
+        password.setBackgroundResource(R.drawable.bg_input_login);
     }
 
     private void doLogin() {

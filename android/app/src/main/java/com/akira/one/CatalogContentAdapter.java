@@ -62,6 +62,8 @@ public class CatalogContentAdapter extends RecyclerView.Adapter<CatalogContentAd
         h.number.setText(String.valueOf(position + 1));
         h.name.setText(item.name);
         h.meta.setText(metaLabel(item));
+        // Canais ao vivo: lista limpa (número, logo e nome), sem a linha "CANAL AO VIVO".
+        h.meta.setVisibility("live".equals(item.type) ? View.GONE : View.VISIBLE);
         h.itemView.setSelected(selectedKey.equals(item.key()));
 
         if (item.icon != null && !item.icon.isBlank()) {

@@ -92,6 +92,13 @@ public class CatalogActivity extends BaseActivity {
     private final Handler previewHandler = new Handler(Looper.getMainLooper());
     private Runnable pendingPreviewRunnable;
 
+    // TV ao vivo: painel de informações do canal (sem vídeo)
+    private android.widget.ImageView infoLogo;
+    private android.widget.ImageView infoHeart;
+    private TextView infoEpgNow;
+    private TextView infoEpgNext;
+    private Runnable pendingInfoRunnable;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,6 +135,10 @@ public class CatalogActivity extends BaseActivity {
         categoriesRecycler.setAdapter(categoryAdapter);
 
         setupContentRecycler();
+        if ("live".equals(type)) {
+            setupRail();
+            setupLiveInfoPanel();
+        }
 
         search.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int st, int c, int a) {}
@@ -195,9 +206,11 @@ public class CatalogActivity extends BaseActivity {
             liveAdapter = new CatalogContentAdapter(shown, new CatalogContentAdapter.Listener() {
                 @Override public void onClick(ContentItem item) { openLiveFullScreen(item); }
                 @Override public void onLongClick(ContentItem item) { context(item); }
-                @Override public void onFocus(ContentItem item) { /* preview removido */ }
+                @Override public void onFocus(ContentItem item) { scheduleLiveInfo(item); }
                 @Override public void onMoveLeft() { focusSelectedCategory(); }
-                @Override public void onMoveRight() { /* sem painel de preview */ }
+                @Override public void onMoveRight() {
+                    if (previewFavoriteButton != null) previewFavoriteButton.requestFocus();
+                }
             });
             contentRecycler.setAdapter(liveAdapter);
         }
@@ -216,6 +229,172 @@ public class CatalogActivity extends BaseActivity {
         if (previewEpgButton != null) previewEpgButton.setOnClickListener(v -> openPreviewEpg());
         if (previewQualityButton != null) previewQualityButton.setOnClickListener(v -> showQualityDialog(previewItem));
         if (previewFavoriteButton != null) previewFavoriteButton.setOnClickListener(v -> togglePreviewFavorite());
+    }
+
+    // ------------------------------------------------------------ Menu lateral (TV ao vivo)
+
+    private void setupRail() {
+        View live = findViewById(R.id.railLive);
+        if (live != null) live.setSelected(true);
+
+        bindRail(R.id.railSearch, () -> startActivity(new Intent(this, SearchActivity.class)));
+        bindRail(R.id.railHome, this::finish);
+        bindRail(R.id.railLive, () -> { /* já está em TV ao Vivo */ });
+        bindRail(R.id.railMovies, () -> switchCatalog("movie"));
+        bindRail(R.id.railSeries, () -> switchCatalog("series"));
+        bindRail(R.id.railFavorites, () -> startActivity(new Intent(this, FavoritesActivity.class)));
+        bindRail(R.id.railSettings, () -> startActivity(new Intent(this, SettingsActivity.class)));
+        bindRail(R.id.railLogout, this::confirmLogout);
+    }
+
+    private void bindRail(int id, Runnable action) {
+        View v = findViewById(id);
+        if (v != null) v.setOnClickListener(x -> action.run());
+    }
+
+    private void switchCatalog(String nextType) {
+        Intent i = new Intent(this, CatalogActivity.class);
+        i.putExtra("type", nextType);
+        startActivity(i);
+        finish();
+    }
+
+    private void confirmLogout() {
+        new AlertDialog.Builder(this)
+                .setTitle("Sair da conta?")
+                .setMessage("Você vai precisar entrar de novo com usuário e senha.")
+                .setNegativeButton("Cancelar", null)
+                .setPositiveButton("Sair", (d, w) -> {
+                    CatalogCache.clearAll(this);
+                    Prefs.clearActivation(this);
+                    Prefs.saveLists(this, null);
+                    Intent i = new Intent(this, LoginActivity.class);
+                    i.putExtra("force_login", true);
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(i);
+                    finish();
+                })
+                .show();
+    }
+
+    // ------------------------------------------------------------ Informações do canal (sem vídeo)
+
+    private void setupLiveInfoPanel() {
+        previewTitle = findViewById(R.id.previewChannelTitle);
+        previewEpgButton = findViewById(R.id.previewEpgButton);
+        previewFavoriteButton = findViewById(R.id.previewFavoriteButton);
+        infoLogo = findViewById(R.id.infoLogo);
+        infoHeart = findViewById(R.id.infoHeart);
+        infoEpgNow = findViewById(R.id.infoEpgNow);
+        infoEpgNext = findViewById(R.id.infoEpgNext);
+
+        if (previewEpgButton != null) previewEpgButton.setOnClickListener(v -> openPreviewEpg());
+        if (previewFavoriteButton != null) previewFavoriteButton.setOnClickListener(v -> togglePreviewFavorite());
+        if (infoHeart != null) infoHeart.setOnClickListener(v -> togglePreviewFavorite());
+    }
+
+    /** Atualiza o painel do canal focado, com um pequeno atraso para não pedir EPG a cada rolagem. */
+    private void scheduleLiveInfo(ContentItem item) {
+        if (!"live".equals(type) || item == null || previewTitle == null) return;
+        if (pendingInfoRunnable != null) previewHandler.removeCallbacks(pendingInfoRunnable);
+        pendingInfoRunnable = () -> showLiveInfo(item);
+        previewHandler.postDelayed(pendingInfoRunnable, 300L);
+    }
+
+    private void showLiveInfo(final ContentItem item) {
+        previewItem = item;
+        previewTitle.setText(item.name);
+        if (infoLogo != null) {
+            if (item.icon != null && !item.icon.isBlank()) {
+                com.bumptech.glide.Glide.with(this).load(item.icon).centerInside()
+                        .placeholder(R.drawable.akira_icon).into(infoLogo);
+            } else {
+                infoLogo.setImageResource(R.drawable.akira_icon);
+            }
+        }
+        updatePreviewFavoriteButton();
+        if (infoEpgNow != null) infoEpgNow.setText("Carregando programação…");
+        if (infoEpgNext != null) infoEpgNext.setText("");
+
+        ContentItem variant = selectedVariantFor(item);
+        final String streamId = variant == null ? item.id : variant.id;
+        final String key = item.key();
+        XtreamClient.getShortEpg(this, streamId, new XtreamClient.ObjectCallback() {
+            @Override public void onSuccess(JSONObject o) {
+                if (previewItem == null || !key.equals(previewItem.key())) return;
+                applyEpg(o);
+            }
+
+            @Override public void onError(Exception e) {
+                if (previewItem == null || !key.equals(previewItem.key())) return;
+                if (infoEpgNow != null) infoEpgNow.setText("Programação indisponível");
+                if (infoEpgNext != null) infoEpgNext.setText("");
+            }
+        });
+    }
+
+    /** Programa atual em amarelo e os próximos logo abaixo (mesmo formato da tela de EPG). */
+    private void applyEpg(JSONObject o) {
+        if (infoEpgNow == null || infoEpgNext == null) return;
+        JSONArray a = o == null ? null : o.optJSONArray("epg_listings");
+        if (a == null && o != null) a = o.optJSONArray("epg_list");
+
+        java.text.SimpleDateFormat fmt = new java.text.SimpleDateFormat("HH:mm", Locale.getDefault());
+        long nowSec = System.currentTimeMillis() / 1000L;
+        List<String> lines = new ArrayList<>();
+        boolean firstIsCurrent = false;
+
+        if (a != null) {
+            for (int i = 0; i < a.length(); i++) {
+                JSONObject e = a.optJSONObject(i);
+                if (e == null) continue;
+                long start = e.optLong("start_timestamp", 0L);
+                long stop = e.optLong("stop_timestamp", 0L);
+                if (stop > 0 && nowSec >= stop) continue; // já terminou
+
+                String title = decodeEpgText(e.optString("title", ""));
+                if (title.isEmpty()) title = "Sem título";
+                String range;
+                if (start > 0 && stop > 0) {
+                    range = fmt.format(new java.util.Date(start * 1000L)) + " ~ " + fmt.format(new java.util.Date(stop * 1000L));
+                } else {
+                    String s = e.optString("start", "");
+                    range = s.length() >= 16 ? s.substring(11, 16) : "--:--";
+                }
+                if (lines.isEmpty()) firstIsCurrent = start > 0 && nowSec >= start;
+                lines.add(range + "  " + title);
+            }
+        }
+
+        if (lines.isEmpty()) {
+            infoEpgNow.setText("Programação indisponível");
+            infoEpgNext.setText("");
+            return;
+        }
+        infoEpgNow.setText(lines.get(0) + (firstIsCurrent ? " • Ao vivo" : ""));
+        StringBuilder next = new StringBuilder();
+        for (int i = 1; i < lines.size() && i <= 3; i++) {
+            if (next.length() > 0) next.append('\n');
+            next.append(lines.get(i));
+        }
+        infoEpgNext.setText(next.toString());
+    }
+
+    /** O Xtream envia título/descrição do EPG em base64. */
+    private static String decodeEpgText(String v) {
+        if (v == null || v.isBlank()) return "";
+        try {
+            byte[] b = android.util.Base64.decode(v, android.util.Base64.DEFAULT);
+            String s = new String(b, java.nio.charset.StandardCharsets.UTF_8);
+            int control = 0;
+            for (int i = 0; i < s.length(); i++) {
+                char ch = s.charAt(i);
+                if (ch < 32 && ch != '\n' && ch != '\r' && ch != '\t') control++;
+            }
+            return control > 2 ? v : s.trim();
+        } catch (Exception e) {
+            return v;
+        }
     }
 
     private void ensurePreviewPlayer() {
@@ -382,6 +561,10 @@ public class CatalogActivity extends BaseActivity {
     }
 
     private void updatePreviewFavoriteButton() {
+        if (infoHeart != null) {
+            boolean fav = previewItem != null && Prefs.isFavorite(this, previewItem);
+            infoHeart.setImageResource(fav ? R.drawable.ic_heart_filled : R.drawable.ic_heart);
+        }
         if (previewFavoriteButton == null) return;
         if (previewItem == null) {
             previewFavoriteButton.setText("Adicionar aos favoritos ♡");

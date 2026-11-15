@@ -1,3 +1,10 @@
+# AKIRA ONE 1.9.0 — Novo login e nova tela de canais
+
+- Login redesenhado: fundo azul escuro com brilho, logo no topo, campos largos cinza, botões ENTRAR e MOSTRAR SENHA em degradê roxo/azul e ID do aparelho no canto inferior esquerdo. Mantidos o aviso vermelho de usuário/senha inválidos e o preenchimento da última conta.
+- TV ao Vivo redesenhada: menu lateral de ícones (pesquisar, início, TV, filmes, séries, favoritos, configurações e sair), título com data e hora, listas planas com busca em contorno, categoria selecionada com barra azul e ícone azul de "ao vivo" no canal selecionado.
+- Novo painel de informações do canal (sem vídeo, para não gastar uma segunda conexão da lista): logo, nome, coração de favorito, programação atual em amarelo e próximos programas, botões EPG e Adicionar aos favoritos. OK continua abrindo o canal em tela cheia.
+- Cabeçalho, painéis e listas das telas de Filmes e Séries também ganharam o novo estilo (categorias planas, busca em contorno).
+
 # AKIRA ONE 1.8.3 — Corrige o player que fechava ao abrir
 
 - Corrigido: ao abrir um canal, filme ou episódio o app fechava (erro "Error inflating class" em activity_player). Os botões de voltar/avançar 10 s da barra nova eram de um tipo que o Media3 não aceita; agora usam o formato oficial da biblioteca, e o número (10) é preenchido por ela.

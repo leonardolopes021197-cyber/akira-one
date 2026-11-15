@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="52dp"
-    android:layout_marginBottom="5dp"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="2dp"
     android:background="@drawable/catalog_category_bg"
     android:clickable="true"
     android:focusable="true"
     android:gravity="center_vertical"
+    android:minHeight="46dp"
     android:orientation="horizontal"
-    android:paddingStart="16dp"
-    android:paddingEnd="12dp">
+    android:paddingStart="12dp"
+    android:paddingEnd="16dp">
 
     <TextView
         android:id="@+id/categoryName"
@@ -17,24 +18,21 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:ellipsize="end"
-        android:fontFamily="sans-serif-medium"
         android:maxLines="1"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:text="Categoria"
         android:textColor="@color/akira_text"
-        android:textSize="14sp" />
+        android:textSize="15sp" />
 
     <TextView
         android:id="@+id/categoryCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_chip"
-        android:gravity="center"
-        android:minWidth="34dp"
-        android:paddingStart="8dp"
-        android:paddingTop="2dp"
-        android:paddingEnd="8dp"
-        android:paddingBottom="2dp"
+        android:layout_marginStart="8dp"
+        android:gravity="end"
+        android:minWidth="32dp"
         android:text="0"
-        android:textColor="#DDE4F0"
-        android:textSize="11sp" />
+        android:textColor="@color/akira_muted"
+        android:textSize="14sp" />
 </LinearLayout>

@@ -1,212 +1,176 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_app"
-    android:fillViewport="true">
+    android:background="@drawable/bg_login">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:padding="28dp">
+        android:fillViewport="true">
 
-        <!-- Marca e mensagem -->
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.15"
-            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
             android:orientation="vertical"
-            android:paddingEnd="32dp">
+            android:paddingTop="16dp"
+            android:paddingBottom="36dp">
 
             <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="96dp"
+                android:layout_width="240dp"
+                android:layout_height="84dp"
                 android:contentDescription="Akira TV"
-                android:scaleType="fitStart"
+                android:scaleType="centerInside"
                 android:src="@drawable/akira_brand" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="22dp"
-                android:letterSpacing="0.12"
-                android:text="ENTRETENIMENTO SEM LIMITES"
-                android:textColor="@color/akira_red"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:fontFamily="sans-serif-medium"
-                android:lineSpacingExtra="2dp"
-                android:text="TV ao vivo, filmes e séries em um só lugar."
-                android:textColor="@color/akira_text"
-                android:textSize="30sp"
-                android:textStyle="bold" />
-
+            <!-- Coluna central: 2/4 da largura (espaços laterais com peso 1) -->
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
+                android:baselineAligned="false"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/bg_chip"
-                    android:paddingStart="12dp"
-                    android:paddingTop="6dp"
-                    android:paddingEnd="12dp"
-                    android:paddingBottom="6dp"
-                    android:text="TV ao Vivo"
-                    android:textColor="#DDE4F0"
-                    android:textSize="12sp" />
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/bg_chip"
-                    android:paddingStart="12dp"
-                    android:paddingTop="6dp"
-                    android:paddingEnd="12dp"
-                    android:paddingBottom="6dp"
-                    android:text="Filmes"
-                    android:textColor="#DDE4F0"
-                    android:textSize="12sp" />
+                    android:layout_weight="2"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/bg_chip"
-                    android:paddingStart="12dp"
-                    android:paddingTop="6dp"
-                    android:paddingEnd="12dp"
-                    android:paddingBottom="6dp"
-                    android:text="Séries"
-                    android:textColor="#DDE4F0"
-                    android:textSize="12sp" />
+                    <EditText
+                        android:id="@+id/loginUser"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:background="@drawable/bg_input_login"
+                        android:hint="Usuário"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
+                        android:paddingStart="18dp"
+                        android:paddingEnd="18dp"
+                        android:singleLine="true"
+                        android:textColor="@color/akira_text"
+                        android:textColorHint="#8A8A8A"
+                        android:textSize="20sp" />
 
+                    <EditText
+                        android:id="@+id/loginPass"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/bg_input_login"
+                        android:hint="Senha"
+                        android:imeOptions="actionDone"
+                        android:inputType="textPassword"
+                        android:paddingStart="18dp"
+                        android:paddingEnd="18dp"
+                        android:singleLine="true"
+                        android:textColor="@color/akira_text"
+                        android:textColorHint="#8A8A8A"
+                        android:textSize="20sp" />
+
+                    <!-- Aviso de erro (usuário/senha inválidos ou sem conexão). Aparece só quando falha. -->
+                    <TextView
+                        android:id="@+id/loginError"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/bg_error"
+                        android:fontFamily="sans-serif-medium"
+                        android:gravity="center_vertical"
+                        android:paddingStart="14dp"
+                        android:paddingTop="10dp"
+                        android:paddingEnd="14dp"
+                        android:paddingBottom="10dp"
+                        android:text=""
+                        android:textColor="#FFD9D5"
+                        android:textSize="14sp"
+                        android:visibility="gone" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/loginButton"
+                            android:layout_width="0dp"
+                            android:layout_height="56dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_btn_login"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:fontFamily="sans-serif-medium"
+                            android:gravity="center"
+                            android:stateListAnimator="@animator/focus_scale"
+                            android:text="ENTRAR"
+                            android:textColor="@color/akira_text"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/loginShowPass"
+                            android:layout_width="0dp"
+                            android:layout_height="56dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_btn_login"
+                            android:clickable="true"
+                            android:ellipsize="end"
+                            android:focusable="true"
+                            android:fontFamily="sans-serif-medium"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:stateListAnimator="@animator/focus_scale"
+                            android:text="MOSTRAR SENHA"
+                            android:textColor="@color/akira_text"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <ProgressBar
+                        android:id="@+id/loginProgress"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="14dp"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/loginStatus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:text=""
+                        android:textColor="@color/akira_muted"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
             </LinearLayout>
         </LinearLayout>
+    </ScrollView>
 
-        <!-- Cartão de acesso -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.9"
-            android:background="@drawable/bg_panel"
-            android:orientation="vertical"
-            android:padding="24dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-medium"
-                android:text="Acessar Akira TV"
-                android:textColor="@color/akira_text"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="Entre com os dados da sua lista."
-                android:textColor="@color/akira_muted"
-                android:textSize="14sp" />
-
-            <EditText
-                android:id="@+id/loginUser"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginTop="22dp"
-                android:background="@drawable/bg_input"
-                android:hint="Usuário"
-                android:imeOptions="actionNext"
-                android:inputType="text"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:singleLine="true"
-                android:textColor="@color/akira_text"
-                android:textColorHint="@color/akira_muted"
-                android:textSize="16sp" />
-
-            <EditText
-                android:id="@+id/loginPass"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/bg_input"
-                android:hint="Senha"
-                android:imeOptions="actionDone"
-                android:inputType="textPassword"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:singleLine="true"
-                android:textColor="@color/akira_text"
-                android:textColorHint="@color/akira_muted"
-                android:textSize="16sp" />
-
-            <!-- Aviso de erro (usuário/senha inválidos ou sem conexão). Aparece só quando falha. -->
-            <TextView
-                android:id="@+id/loginError"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:background="@drawable/bg_error"
-                android:drawablePadding="10dp"
-                android:fontFamily="sans-serif-medium"
-                android:gravity="center_vertical"
-                android:paddingStart="14dp"
-                android:paddingTop="10dp"
-                android:paddingEnd="14dp"
-                android:paddingBottom="10dp"
-                android:text=""
-                android:textColor="#FFD9D5"
-                android:textSize="14sp"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/loginButton"
-                android:layout_width="match_parent"
-                android:layout_height="54dp"
-                android:layout_marginTop="22dp"
-                android:background="@drawable/bg_card_red"
-                android:clickable="true"
-                android:focusable="true"
-                android:fontFamily="sans-serif-medium"
-                android:gravity="center"
-                android:letterSpacing="0.06"
-                android:text="ENTRAR"
-                android:textColor="@color/akira_text"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <ProgressBar
-                android:id="@+id/loginProgress"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="16dp"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/loginStatus"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:gravity="center"
-                android:text=""
-                android:textColor="@color/akira_muted"
-                android:textSize="14sp" />
-        </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+    <!-- ID do aparelho (usado para associar a lista no painel) -->
+    <TextView
+        android:id="@+id/loginDeviceId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_margin="14dp"
+        android:text="ID: --"
+        android:textColor="#B3FFFFFF"
+        android:textSize="14sp" />
+</FrameLayout>

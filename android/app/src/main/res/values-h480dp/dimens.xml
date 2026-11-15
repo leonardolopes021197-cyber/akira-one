@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="rail_item">44dp</dimen>
+    <dimen name="rail_pad">10dp</dimen>
+</resources>
