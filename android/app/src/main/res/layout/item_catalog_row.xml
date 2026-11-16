@@ -7,7 +7,7 @@
     android:clickable="true"
     android:focusable="true"
     android:gravity="center_vertical"
-    android:minHeight="54dp"
+    android:minHeight="58dp"
     android:orientation="horizontal"
     android:paddingStart="6dp"
     android:paddingTop="5dp"
@@ -50,15 +50,17 @@
             android:textColor="@color/akira_text"
             android:textSize="16sp" />
 
-        <!-- Só aparece em filmes/séries (no TV ao Vivo o adapter esconde). -->
+        <!-- O que está passando agora no canal (fonte menor, embaixo do nome). -->
         <TextView
             android:id="@+id/rowMeta"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:text="CANAL AO VIVO"
-            android:textColor="@color/akira_muted"
-            android:textSize="10sp" />
+            android:layout_marginTop="1dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text=""
+            android:textColor="#8F9BB3"
+            android:textSize="11sp" />
     </LinearLayout>
 
     <!-- Azul = canal selecionado / em foco. Transparente nos demais. -->

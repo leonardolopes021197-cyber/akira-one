@@ -14,6 +14,10 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
+/**
+ * Lista de canais ao vivo: número, logo, nome e, embaixo do nome em fonte menor,
+ * o programa que está passando agora (buscado só para os canais visíveis).
+ */
 public class CatalogContentAdapter extends RecyclerView.Adapter<CatalogContentAdapter.Holder> {
     public interface Listener {
         void onClick(ContentItem item);
@@ -26,16 +30,10 @@ public class CatalogContentAdapter extends RecyclerView.Adapter<CatalogContentAd
     private final List<ContentItem> items;
     private final Listener listener;
     private String selectedKey = "";
-    private int spanCount = 1;
 
     public CatalogContentAdapter(List<ContentItem> items, Listener listener) {
         this.items = items;
         this.listener = listener;
-    }
-
-    /** Colunas da grade: define quando LEFT/RIGHT saem da lista ou só andam entre os cartões. */
-    public void setSpanCount(int span) {
-        spanCount = Math.max(1, span);
     }
 
     public void setSelectedItem(ContentItem item) {
@@ -58,19 +56,30 @@ public class CatalogContentAdapter extends RecyclerView.Adapter<CatalogContentAd
     @NonNull
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_channel_card, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_catalog_row, parent, false);
         return new Holder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull Holder h, int position) {
         ContentItem item = items.get(position);
+        h.boundKey = item.key();
         h.number.setText(String.valueOf(position + 1));
         h.name.setText(item.name);
-        h.meta.setText(metaLabel(item));
-        // Canais ao vivo: lista limpa (número, logo e nome), sem a linha "CANAL AO VIVO".
-        h.meta.setVisibility("live".equals(item.type) ? View.GONE : View.VISIBLE);
         h.itemView.setSelected(selectedKey.equals(item.key()));
+
+        // "O que está passando": usa o cache e, se faltar, pede (só enquanto o item estiver na tela).
+        final android.content.Context ctx = h.itemView.getContext();
+        String cached = EpgNowCache.peek(ctx, item.id);
+        if (cached != null) {
+            h.meta.setText(cached);
+        } else {
+            h.meta.setText("");
+            final String key = item.key();
+            EpgNowCache.request(ctx, item.id, title -> {
+                if (key.equals(h.boundKey)) h.meta.setText(title);
+            });
+        }
 
         if (item.icon != null && !item.icon.isBlank()) {
             Glide.with(h.icon).load(item.icon).centerInside().placeholder(R.drawable.akira_icon).into(h.icon);
@@ -84,32 +93,21 @@ public class CatalogContentAdapter extends RecyclerView.Adapter<CatalogContentAd
             return true;
         });
         h.itemView.setOnFocusChangeListener((v, hasFocus) -> {
-            v.animate().scaleX(hasFocus ? 1.05f : 1f).scaleY(hasFocus ? 1.05f : 1f).setDuration(120).start();
+            v.animate().scaleX(hasFocus ? 1.012f : 1f).scaleY(hasFocus ? 1.012f : 1f).setDuration(100).start();
             if (hasFocus) listener.onFocus(item);
         });
         h.itemView.setOnKeyListener((v, keyCode, event) -> {
             if (event.getAction() != KeyEvent.ACTION_DOWN) return false;
-            int pos = h.getBindingAdapterPosition();
-            if (pos == RecyclerView.NO_POSITION) return false;
-            int column = pos % spanCount;
-            // Só sai da grade na primeira/última coluna; no meio, o foco anda entre os cartões.
-            if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT && column == 0) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
                 listener.onMoveLeft();
                 return true;
             }
-            if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT && (column == spanCount - 1 || pos == getItemCount() - 1)) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
                 listener.onMoveRight();
                 return true;
             }
             return false;
         });
-    }
-
-    private String metaLabel(ContentItem item) {
-        if ("live".equals(item.type)) return item.meta == null || item.meta.isBlank() ? "CANAL AO VIVO" : item.meta.toUpperCase();
-        if ("movie".equals(item.type)) return item.extension == null || item.extension.isBlank() ? "FILME" : "FILME • " + item.extension.toUpperCase();
-        if ("series".equals(item.type)) return "SÉRIE";
-        return "AKIRA";
     }
 
     @Override
@@ -120,6 +118,7 @@ public class CatalogContentAdapter extends RecyclerView.Adapter<CatalogContentAd
         final TextView name;
         final TextView meta;
         final ImageView icon;
+        String boundKey = "";
 
         Holder(View view) {
             super(view);

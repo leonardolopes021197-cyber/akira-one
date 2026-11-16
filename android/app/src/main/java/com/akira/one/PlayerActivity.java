@@ -394,7 +394,8 @@ public class PlayerActivity extends BaseActivity {
 
     private void updateQualityButton() {
         if (qualityButton == null) return;
-        if (!"live".equals(contentType)) {
+        // Canais não são mais agrupados por qualidade: cada canal é aberto como vem da lista.
+        if (liveVariants.isEmpty() || !"live".equals(contentType)) {
             qualityButton.setVisibility(View.GONE);
             return;
         }

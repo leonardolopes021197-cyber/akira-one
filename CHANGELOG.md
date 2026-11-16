@@ -1,3 +1,9 @@
+# AKIRA ONE 1.11.0 — Canais em 3 colunas, programa em cada canal e sem agrupar qualidades
+
+- TV ao Vivo em três colunas: categorias (com busca), canais (com busca) e EPG do canal selecionado. A coluna da direita mostra logo, nome, coração de favorito, a lista de programas (o que está no ar fica destacado com barra de progresso e tempo restante) e os botões ASSISTIR e EPG.
+- Embaixo do nome de cada canal aparece, em fonte menor, o programa que está passando agora. A busca é feita só para os canais visíveis, no máximo 3 por vez, com cache de 5 minutos e descarte de pedidos de canais que já saíram da tela, para não sobrecarregar o servidor.
+- Removido o agrupamento de qualidades: os canais aparecem exatamente como vêm da lista (SporTV FHD, HD e SD separados). Sem agrupamento, o botão HD do player não aparece mais e OK abre o canal direto.
+
 # AKIRA ONE 1.10.0 — TV ao Vivo moderna e home só com o menu
 
 - TV ao Vivo refeita: categorias viraram pílulas horizontais (a selecionada em degradê azul/roxo), canais em grade de cartões com logo grande e número, e novo painel de destaque à direita com logo, selo AO VIVO, programa atual, barra de progresso, tempo restante, próximos programas e botões ASSISTIR, favoritar (coração) e EPG. O painel não usa vídeo, então não gasta uma segunda conexão da lista.
