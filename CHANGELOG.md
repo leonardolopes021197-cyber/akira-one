@@ -1,3 +1,9 @@
+# AKIRA ONE 1.10.0 — TV ao Vivo moderna e home só com o menu
+
+- TV ao Vivo refeita: categorias viraram pílulas horizontais (a selecionada em degradê azul/roxo), canais em grade de cartões com logo grande e número, e novo painel de destaque à direita com logo, selo AO VIVO, programa atual, barra de progresso, tempo restante, próximos programas e botões ASSISTIR, favoritar (coração) e EPG. O painel não usa vídeo, então não gasta uma segunda conexão da lista.
+- Controle remoto: nas pílulas, "baixo" vai para os canais; na grade, as setas andam entre os cartões e só saem pelas pontas (esquerda → menu lateral, direita → botão ASSISTIR).
+- Home: removidos os três cards do meio (TV ao Vivo, Filmes, Séries) e os botões redondos do topo. Tudo se acessa pelo menu da esquerda, que ganhou o item Pesquisar. O banner ficou maior.
+
 # AKIRA ONE 1.9.0 — Novo login e nova tela de canais
 
 - Login redesenhado: fundo azul escuro com brilho, logo no topo, campos largos cinza, botões ENTRAR e MOSTRAR SENHA em degradê roxo/azul e ID do aparelho no canto inferior esquerdo. Mantidos o aviso vermelho de usuário/senha inválidos e o preenchimento da última conta.

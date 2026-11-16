@@ -19,10 +19,17 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.H> {
 
     private final List<CategoryItem> items;
     private final Listener listener;
+    private final boolean chips;
     private String selected = "";
 
     public CategoryAdapter(List<CategoryItem> items, Listener listener) {
+        this(items, false, listener);
+    }
+
+    /** chips = true: categorias em pílulas horizontais (TV ao Vivo). */
+    public CategoryAdapter(List<CategoryItem> items, boolean chips, Listener listener) {
         this.items = items;
+        this.chips = chips;
         this.listener = listener;
     }
 
@@ -50,7 +57,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.H> {
     @NonNull
     @Override
     public H onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_category, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(chips ? R.layout.item_category_chip : R.layout.item_category, parent, false);
         return new H(view);
     }
 
@@ -72,7 +79,10 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.H> {
             }
         });
         h.itemView.setOnKeyListener((v, keyCode, event) -> {
-            if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
+            if (event.getAction() != KeyEvent.ACTION_DOWN) return false;
+            // Lista vertical: direita vai para o conteúdo. Pílulas: para baixo vai para o conteúdo.
+            int toContent = chips ? KeyEvent.KEYCODE_DPAD_DOWN : KeyEvent.KEYCODE_DPAD_RIGHT;
+            if (keyCode == toContent) {
                 listener.onMoveRight();
                 return true;
             }

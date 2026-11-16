@@ -2,4 +2,5 @@
 <resources>
     <dimen name="rail_item">36dp</dimen>
     <dimen name="rail_pad">8dp</dimen>
+    <dimen name="nav_item_h">38dp</dimen>
 </resources>

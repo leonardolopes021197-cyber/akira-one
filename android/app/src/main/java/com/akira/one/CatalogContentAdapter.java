@@ -26,10 +26,16 @@ public class CatalogContentAdapter extends RecyclerView.Adapter<CatalogContentAd
     private final List<ContentItem> items;
     private final Listener listener;
     private String selectedKey = "";
+    private int spanCount = 1;
 
     public CatalogContentAdapter(List<ContentItem> items, Listener listener) {
         this.items = items;
         this.listener = listener;
+    }
+
+    /** Colunas da grade: define quando LEFT/RIGHT saem da lista ou só andam entre os cartões. */
+    public void setSpanCount(int span) {
+        spanCount = Math.max(1, span);
     }
 
     public void setSelectedItem(ContentItem item) {
@@ -52,7 +58,7 @@ public class CatalogContentAdapter extends RecyclerView.Adapter<CatalogContentAd
     @NonNull
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_catalog_row, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_channel_card, parent, false);
         return new Holder(view);
     }
 
@@ -78,16 +84,20 @@ public class CatalogContentAdapter extends RecyclerView.Adapter<CatalogContentAd
             return true;
         });
         h.itemView.setOnFocusChangeListener((v, hasFocus) -> {
-            v.animate().scaleX(hasFocus ? 1.012f : 1f).scaleY(hasFocus ? 1.012f : 1f).setDuration(100).start();
+            v.animate().scaleX(hasFocus ? 1.05f : 1f).scaleY(hasFocus ? 1.05f : 1f).setDuration(120).start();
             if (hasFocus) listener.onFocus(item);
         });
         h.itemView.setOnKeyListener((v, keyCode, event) -> {
             if (event.getAction() != KeyEvent.ACTION_DOWN) return false;
-            if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
+            int pos = h.getBindingAdapterPosition();
+            if (pos == RecyclerView.NO_POSITION) return false;
+            int column = pos % spanCount;
+            // Só sai da grade na primeira/última coluna; no meio, o foco anda entre os cartões.
+            if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT && column == 0) {
                 listener.onMoveLeft();
                 return true;
             }
-            if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT && (column == spanCount - 1 || pos == getItemCount() - 1)) {
                 listener.onMoveRight();
                 return true;
             }

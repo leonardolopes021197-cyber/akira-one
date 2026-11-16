@@ -73,7 +73,7 @@ public class MainActivity extends BaseActivity {
         setupLaunchRow();
         bindActions();
         findViewById(R.id.navHome).setSelected(true);
-        findViewById(R.id.cardLive).requestFocus();
+        findViewById(R.id.navHome).requestFocus();
         loadLaunchRow();
     }
 
@@ -226,18 +226,14 @@ public class MainActivity extends BaseActivity {
     }
 
     private void bindActions() {
-        findViewById(R.id.navHome).setOnClickListener(v -> findViewById(R.id.cardLive).requestFocus());
+        // Navegação só pelo menu da esquerda.
+        findViewById(R.id.navHome).setOnClickListener(v -> findViewById(R.id.homeScroll).scrollTo(0, 0));
+        findViewById(R.id.navSearch).setOnClickListener(v -> openSearch());
         findViewById(R.id.navLive).setOnClickListener(v -> openCatalog("live"));
         findViewById(R.id.navMovies).setOnClickListener(v -> openCatalog("movie"));
         findViewById(R.id.navSeries).setOnClickListener(v -> openCatalog("series"));
         findViewById(R.id.navFavorites).setOnClickListener(v -> openFavorites());
         findViewById(R.id.navSettings).setOnClickListener(v -> openSettings());
-
-        findViewById(R.id.cardLive).setOnClickListener(v -> openCatalog("live"));
-        findViewById(R.id.cardMovies).setOnClickListener(v -> openCatalog("movie"));
-        findViewById(R.id.cardSeries).setOnClickListener(v -> openCatalog("series"));
-        findViewById(R.id.searchButton).setOnClickListener(v -> openSearch());
-        findViewById(R.id.settingsButton).setOnClickListener(v -> openSettings());
         findViewById(R.id.moviesAllButton).setOnClickListener(v -> openCatalog("movie"));
     }
 

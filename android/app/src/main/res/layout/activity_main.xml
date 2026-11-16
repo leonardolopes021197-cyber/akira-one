@@ -27,8 +27,8 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginBottom="8dp"
+                android:layout_height="44dp"
+                android:layout_marginBottom="6dp"
                 android:contentDescription="Akira"
                 android:scaleType="centerInside"
                 android:src="@drawable/akira_brand" />
@@ -43,8 +43,8 @@
             <LinearLayout
                 android:id="@+id/navHome"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginBottom="3dp"
+                android:layout_height="@dimen/nav_item_h"
+                android:layout_marginBottom="2dp"
                 android:background="@drawable/bg_nav_item"
                 android:clickable="true"
                 android:contentDescription="Início"
@@ -77,10 +77,46 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/navSearch"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/nav_item_h"
+                android:layout_marginBottom="2dp"
+                android:background="@drawable/bg_nav_item"
+                android:clickable="true"
+                android:contentDescription="Pesquisar"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="12dp"
+                android:paddingEnd="10dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:duplicateParentState="true"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_search"
+                    android:tint="@color/nav_content" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:duplicateParentState="true"
+                    android:ellipsize="end"
+                    android:fontFamily="sans-serif-medium"
+                    android:maxLines="1"
+                    android:text="Pesquisar"
+                    android:textColor="@color/nav_content"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/navLive"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginBottom="3dp"
+                android:layout_height="@dimen/nav_item_h"
+                android:layout_marginBottom="2dp"
                 android:background="@drawable/bg_nav_item"
                 android:clickable="true"
                 android:contentDescription="TV ao Vivo"
@@ -115,8 +151,8 @@
             <LinearLayout
                 android:id="@+id/navMovies"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginBottom="3dp"
+                android:layout_height="@dimen/nav_item_h"
+                android:layout_marginBottom="2dp"
                 android:background="@drawable/bg_nav_item"
                 android:clickable="true"
                 android:contentDescription="Filmes"
@@ -151,8 +187,8 @@
             <LinearLayout
                 android:id="@+id/navSeries"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginBottom="3dp"
+                android:layout_height="@dimen/nav_item_h"
+                android:layout_marginBottom="2dp"
                 android:background="@drawable/bg_nav_item"
                 android:clickable="true"
                 android:contentDescription="Séries"
@@ -187,8 +223,8 @@
             <LinearLayout
                 android:id="@+id/navFavorites"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginBottom="3dp"
+                android:layout_height="@dimen/nav_item_h"
+                android:layout_marginBottom="2dp"
                 android:background="@drawable/bg_nav_item"
                 android:clickable="true"
                 android:contentDescription="Favoritos"
@@ -223,8 +259,8 @@
             <LinearLayout
                 android:id="@+id/navSettings"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginBottom="3dp"
+                android:layout_height="@dimen/nav_item_h"
+                android:layout_marginBottom="2dp"
                 android:background="@drawable/bg_nav_item"
                 android:clickable="true"
                 android:contentDescription="Configurações"
@@ -336,34 +372,6 @@
                             android:textSize="10sp" />
                     </LinearLayout>
 
-            <ImageView
-                android:id="@+id/searchButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="14dp"
-                android:background="@drawable/bg_icon_btn"
-                android:clickable="true"
-                android:contentDescription="Pesquisar"
-                android:focusable="true"
-                android:padding="10dp"
-                android:src="@drawable/ic_search"
-                android:stateListAnimator="@animator/focus_scale"
-                android:tint="#FFFFFF" />
-
-            <ImageView
-                android:id="@+id/settingsButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="8dp"
-                android:background="@drawable/bg_icon_btn"
-                android:clickable="true"
-                android:contentDescription="Configurações"
-                android:focusable="true"
-                android:padding="10dp"
-                android:src="@drawable/ic_sliders"
-                android:stateListAnimator="@animator/focus_scale"
-                android:tint="#FFFFFF" />
-
                 </LinearLayout>
 
                 <!-- Banner (arte original Akira) -->
@@ -372,258 +380,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_marginTop="10dp"
-                    android:layout_weight="1.1"
+                    android:layout_weight="1.2"
                     android:background="@drawable/bg_round_20"
                     android:clipToOutline="true"
                     android:contentDescription="Akira — o melhor conteúdo em um só lugar"
-                    android:minHeight="130dp"
+                    android:minHeight="120dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/akira_hero" />
-
-                <!-- Atalhos principais -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_weight="0.7"
-                    android:minHeight="84dp"
-                    android:orientation="horizontal">
-
-            <FrameLayout
-                android:id="@+id/cardLive"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="12dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_hcard_red"
-                android:clickable="true"
-                android:contentDescription="TV ao Vivo"
-                android:focusable="true"
-                android:foreground="@drawable/ring_focus_18"
-                android:stateListAnimator="@animator/focus_scale">
-
-                <!-- Ícone grande e translúcido ao fundo (só decoração). -->
-                <ImageView
-                    android:layout_width="76dp"
-                    android:layout_height="76dp"
-                    android:layout_gravity="end|bottom"
-                    android:layout_marginEnd="-8dp"
-                    android:layout_marginBottom="-10dp"
-                    android:alpha="0.12"
-                    android:importantForAccessibility="no"
-                    android:src="@drawable/ic_tv"
-                    android:tint="#FFFFFF" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingStart="14dp"
-                    android:paddingEnd="10dp">
-
-                    <FrameLayout
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:background="@drawable/bg_circle_soft">
-
-                        <ImageView
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
-                            android:layout_gravity="center"
-                            android:importantForAccessibility="no"
-                            android:src="@drawable/ic_tv"
-                            android:tint="#FFFFFF" />
-                    </FrameLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:ellipsize="end"
-                            android:fontFamily="sans-serif-medium"
-                            android:maxLines="1"
-                            android:text="TV AO VIVO"
-                            android:textColor="@color/akira_text"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="1dp"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:text="Canais de TV"
-                            android:textColor="#C3CADB"
-                            android:textSize="11sp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </FrameLayout>
-
-            <FrameLayout
-                android:id="@+id/cardMovies"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="12dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_hcard_blue"
-                android:clickable="true"
-                android:contentDescription="Filmes"
-                android:focusable="true"
-                android:foreground="@drawable/ring_focus_18"
-                android:stateListAnimator="@animator/focus_scale">
-
-                <!-- Ícone grande e translúcido ao fundo (só decoração). -->
-                <ImageView
-                    android:layout_width="76dp"
-                    android:layout_height="76dp"
-                    android:layout_gravity="end|bottom"
-                    android:layout_marginEnd="-8dp"
-                    android:layout_marginBottom="-10dp"
-                    android:alpha="0.12"
-                    android:importantForAccessibility="no"
-                    android:src="@drawable/ic_film"
-                    android:tint="#FFFFFF" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingStart="14dp"
-                    android:paddingEnd="10dp">
-
-                    <FrameLayout
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:background="@drawable/bg_circle_soft">
-
-                        <ImageView
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
-                            android:layout_gravity="center"
-                            android:importantForAccessibility="no"
-                            android:src="@drawable/ic_film"
-                            android:tint="#FFFFFF" />
-                    </FrameLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:ellipsize="end"
-                            android:fontFamily="sans-serif-medium"
-                            android:maxLines="1"
-                            android:text="FILMES"
-                            android:textColor="@color/akira_text"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="1dp"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:text="Lançamentos"
-                            android:textColor="#C3CADB"
-                            android:textSize="11sp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </FrameLayout>
-
-            <FrameLayout
-                android:id="@+id/cardSeries"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="0dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_hcard_purple"
-                android:clickable="true"
-                android:contentDescription="Séries"
-                android:focusable="true"
-                android:foreground="@drawable/ring_focus_18"
-                android:stateListAnimator="@animator/focus_scale">
-
-                <!-- Ícone grande e translúcido ao fundo (só decoração). -->
-                <ImageView
-                    android:layout_width="76dp"
-                    android:layout_height="76dp"
-                    android:layout_gravity="end|bottom"
-                    android:layout_marginEnd="-8dp"
-                    android:layout_marginBottom="-10dp"
-                    android:alpha="0.12"
-                    android:importantForAccessibility="no"
-                    android:src="@drawable/ic_series"
-                    android:tint="#FFFFFF" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingStart="14dp"
-                    android:paddingEnd="10dp">
-
-                    <FrameLayout
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:background="@drawable/bg_circle_soft">
-
-                        <ImageView
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
-                            android:layout_gravity="center"
-                            android:importantForAccessibility="no"
-                            android:src="@drawable/ic_series"
-                            android:tint="#FFFFFF" />
-                    </FrameLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:ellipsize="end"
-                            android:fontFamily="sans-serif-medium"
-                            android:maxLines="1"
-                            android:text="SÉRIES"
-                            android:textColor="@color/akira_text"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="1dp"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:text="Suas séries favoritas"
-                            android:textColor="#C3CADB"
-                            android:textSize="11sp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </FrameLayout>
-
-                </LinearLayout>
 
                 <!-- Lançamentos (filmes mais recentes do catálogo) -->
                 <LinearLayout
