@@ -1,3 +1,14 @@
+# AKIRA ONE 1.12.1 — Corrige tremor na Início e foco pulando para o menu
+
+- Corrigido: a tela de Início tremia na TV. A área principal ficava dentro de um ScrollView com alturas por peso e lista de pôsteres, e as medidas oscilavam sem parar. Agora a Início tem altura fixa da tela e banner e lançamentos dividem o espaço por peso.
+- Corrigido: ao descer rápido com o controle nas categorias (e nos canais), o foco pulava para o menu lateral (Filmes/Séries) em vez de continuar descendo. As listas agora movem o foco item a item e só deixam o foco sair pelo início. Mesma proteção na grade de filmes/séries (para baixo/cima) e na faixa de Lançamentos (esquerda/direita).
+
+# AKIRA ONE 1.12.0 — Atualização automática
+
+- Atualização automática: ao abrir o app (login ou home), ele consulta o GitHub; se houver versão maior, mostra o aviso com o que mudou, baixa o APK com barra de progresso e abre o instalador do Android. Também há o botão Configurações → Sobre → Verificar atualização.
+- O GitHub Actions agora publica cada versão no repositório público de releases (AKIRA_ONE.apk + version.json), usando o segredo RELEASES_TOKEN. Sem o segredo, o passo é ignorado e nada quebra. Instruções em ATUALIZACAO_AUTOMATICA.md.
+- Chave de assinatura fixa (android/akira-signing.jks) para todas as versões. Sem ela o Android recusa atualizar por cima. ATENÇÃO: quem tem o app instalado de uma versão anterior precisa desinstalar uma vez antes de instalar a 1.12.0; depois disso as atualizações entram por cima sozinhas.
+
 # AKIRA ONE 1.11.0 — Canais em 3 colunas, programa em cada canal e sem agrupar qualidades
 
 - TV ao Vivo em três colunas: categorias (com busca), canais (com busca) e EPG do canal selecionado. A coluna da direita mostra logo, nome, coração de favorito, a lista de programas (o que está no ar fica destacado com barra de progresso e tempo restante) e os botões ASSISTIR e EPG.

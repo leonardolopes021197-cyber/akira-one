@@ -88,6 +88,29 @@ public class PosterGridAdapter extends RecyclerView.Adapter<PosterGridAdapter.Ho
             h.overlay.setVisibility(hasFocus ? View.VISIBLE : View.GONE);
         });
         h.itemView.setOnKeyListener((v, keyCode, event) -> {
+            if (event.getAction() == KeyEvent.ACTION_DOWN
+                    && (keyCode == KeyEvent.KEYCODE_DPAD_DOWN || keyCode == KeyEvent.KEYCODE_DPAD_UP)) {
+                RecyclerView rv = ListNav.parentList(v);
+                int pos = h.getBindingAdapterPosition();
+                if (rv != null && pos != RecyclerView.NO_POSITION) {
+                    int span = Math.max(1, spanCount);
+                    int count = getItemCount();
+                    if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
+                        int target = pos + span;
+                        if (target >= count) {
+                            // Última linha incompleta: vai para o último item; se já está na última linha, segura.
+                            if (pos / span < (count - 1) / span) target = count - 1;
+                            else return true;
+                        }
+                        ListNav.focus(rv, target);
+                        return true;
+                    }
+                    int target = pos - span;
+                    if (target < 0) return false; // primeira linha: pode subir (busca)
+                    ListNav.focus(rv, target);
+                    return true;
+                }
+            }
             if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
                 int adapterPosition = h.getBindingAdapterPosition();
                 if (adapterPosition != RecyclerView.NO_POSITION && adapterPosition % Math.max(1, spanCount) == 0) {

@@ -1,8 +1,20 @@
-# Compila o APK do AKIRA ONE automaticamente no GitHub.
+# Compila o APK do AKIRA ONE automaticamente no GitHub e publica a atualização.
+#
 # Quando roda: a cada envio (push) para main/master, ou manualmente em
 # Actions -> "Compilar APK" -> "Run workflow".
-# Onde fica o APK: aba "Releases" do repositório (download direto) e também
-# em Actions -> execução -> "Artifacts".
+#
+# O que gera:
+#  1) Release PRIVADA neste repositório, com AKIRA_ONE_v<versão>.apk.
+#  2) (Atualização automática) Release PÚBLICA no repositório de releases, com:
+#       - AKIRA_ONE.apk        -> nome fixo, é o que o app baixa
+#       - AKIRA_ONE_v<versão>.apk
+#       - version.json         -> o app lê este arquivo para saber se há versão nova
+#     Este passo só roda se existir o segredo RELEASES_TOKEN (ver ATUALIZACAO_AUTOMATICA.md).
+#
+# EDITE AQUI se mudar o nome do repositório público de releases:
+env:
+  RELEASES_REPO: leonardolopes021197-cyber/akira-one-releases
+
 name: Compilar APK
 
 on:
@@ -11,7 +23,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write   # necessário para criar a Release com o APK
+  contents: write   # necessário para criar a Release neste repositório
 
 jobs:
   build:
@@ -33,27 +45,66 @@ jobs:
         with:
           gradle-version: "8.9"
 
-      - name: Compilar (debug)
+      - name: Compilar (assinado com a chave fixa do projeto)
         working-directory: android
         run: gradle assembleDebug --no-daemon --stacktrace
 
-      - name: Nomear o APK com a versão
+      - name: Nomear o APK e criar o version.json
         id: apk
         run: |
           VERSION=$(grep -oP 'versionName = "\K[^"]+' android/app/build.gradle.kts)
+          CODE=$(grep -oP 'versionCode = \K[0-9]+' android/app/build.gradle.kts)
           mkdir -p dist
           cp android/app/build/outputs/apk/debug/app-debug.apk "dist/AKIRA_ONE_v${VERSION}.apk"
+          cp android/app/build/outputs/apk/debug/app-debug.apk "dist/AKIRA_ONE.apk"
+          # Texto que aparece no aviso de atualização: título da primeira versão do CHANGELOG.
+          NOTES=$(sed -n '1p' CHANGELOG.md | sed 's/^# *//')
+          VERSION="$VERSION" CODE="$CODE" NOTES="$NOTES" python3 - <<'PY'
+          import json, os
+          data = {
+              "versionCode": int(os.environ["CODE"]),
+              "versionName": os.environ["VERSION"],
+              "apk": "AKIRA_ONE.apk",
+              "notes": os.environ["NOTES"],
+              "mandatory": False,   # troque para True se quiser forçar a atualização
+          }
+          json.dump(data, open("dist/version.json", "w"), ensure_ascii=False, indent=2)
+          PY
+          cat dist/version.json
           echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "notes=${NOTES}" >> "$GITHUB_OUTPUT"
 
       - name: Guardar como artefato
         uses: actions/upload-artifact@v4
         with:
           name: AKIRA_ONE_v${{ steps.apk.outputs.version }}
-          path: dist/*.apk
+          path: dist/AKIRA_ONE_v*.apk
 
-      - name: Publicar em Releases
+      - name: Publicar em Releases (privado)
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ steps.apk.outputs.version }}
           name: AKIRA ONE v${{ steps.apk.outputs.version }}
-          files: dist/*.apk
+          files: dist/AKIRA_ONE_v*.apk
+
+      - name: Verificar segredo da atualização automática
+        id: autoupdate
+        env:
+          RELEASES_TOKEN: ${{ secrets.RELEASES_TOKEN }}
+        run: |
+          if [ -n "$RELEASES_TOKEN" ]; then echo "enabled=true" >> "$GITHUB_OUTPUT"; else echo "enabled=false" >> "$GITHUB_OUTPUT"; echo "RELEASES_TOKEN não configurado: pulando a publicação pública."; fi
+
+      - name: Publicar atualização (repositório público de releases)
+        if: steps.autoupdate.outputs.enabled == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          repository: ${{ env.RELEASES_REPO }}
+          token: ${{ secrets.RELEASES_TOKEN }}
+          tag_name: v${{ steps.apk.outputs.version }}
+          name: AKIRA ONE v${{ steps.apk.outputs.version }}
+          body: ${{ steps.apk.outputs.notes }}
+          make_latest: "true"
+          files: |
+            dist/AKIRA_ONE.apk
+            dist/AKIRA_ONE_v*.apk
+            dist/version.json

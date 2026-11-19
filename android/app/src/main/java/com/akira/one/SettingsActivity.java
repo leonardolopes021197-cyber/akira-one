@@ -45,6 +45,7 @@ public class SettingsActivity extends BaseActivity {
                 + (versionName.isBlank() ? "Desconhecida" : versionName)
                 + " (" + versionCode + ")");
 
+        findViewById(R.id.checkUpdate).setOnClickListener(v -> UpdateManager.checkGithub(this, true));
         findViewById(R.id.saveSettings).setOnClickListener(v -> savePanel());
         findViewById(R.id.testPanel).setOnClickListener(v -> {
             savePanel(false);

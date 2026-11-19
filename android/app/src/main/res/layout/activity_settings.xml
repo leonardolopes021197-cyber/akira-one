@@ -302,6 +302,20 @@
                 android:textColor="@color/akira_muted"
                 android:textSize="14sp" />
 
+            <TextView
+                android:id="@+id/checkUpdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_item"
+                android:clickable="true"
+                android:focusable="true"
+                android:fontFamily="sans-serif-medium"
+                android:padding="14dp"
+                android:text="Verificar atualização"
+                android:textColor="@color/akira_text"
+                android:textStyle="bold" />
+
         </LinearLayout>
 
         <TextView

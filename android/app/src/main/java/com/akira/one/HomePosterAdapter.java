@@ -33,7 +33,8 @@ public class HomePosterAdapter extends RecyclerView.Adapter<HomePosterAdapter.Ho
 
     /** Altura útil da faixa (sem padding). A largura vira 2/3 dela. */
     public void setPosterHeight(int px) {
-        if (px <= 0 || px == posterHeightPx) return;
+        // Ignora variações de 1px (arredondamento) para não refazer a lista à toa.
+        if (px <= 0 || Math.abs(px - posterHeightPx) < 2) return;
         posterHeightPx = px;
         notifyDataSetChanged();
     }
@@ -72,6 +73,14 @@ public class HomePosterAdapter extends RecyclerView.Adapter<HomePosterAdapter.Ho
         }
 
         h.itemView.setOnClickListener(v -> listener.onClick(item));
+        h.itemView.setOnKeyListener((v, keyCode, event) -> {
+            if (event.getAction() != android.view.KeyEvent.ACTION_DOWN) return false;
+            if (keyCode == android.view.KeyEvent.KEYCODE_DPAD_RIGHT || keyCode == android.view.KeyEvent.KEYCODE_DPAD_LEFT) {
+                RecyclerView rv = ListNav.parentList(v);
+                if (rv != null) return ListNav.step(rv, h.getBindingAdapterPosition(), keyCode == android.view.KeyEvent.KEYCODE_DPAD_RIGHT ? 1 : -1);
+            }
+            return false;
+        });
     }
 
     @Override

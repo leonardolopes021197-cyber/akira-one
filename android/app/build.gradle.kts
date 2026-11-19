@@ -10,14 +10,34 @@ android {
         applicationId = "com.akira.one"
         minSdk = 23
         targetSdk = 35
-        versionCode = 31
-        versionName = "1.11.0"
+        versionCode = 33
+        versionName = "1.12.1"
+    }
+
+    // Chave de assinatura FIXA do AKIRA ONE (android/akira-signing.jks).
+    // O Android só atualiza um app por cima se a assinatura for a mesma, então TODA versão
+    // (compilada no GitHub ou no celular) precisa sair com esta chave. Não perca este arquivo.
+    val akiraKeystore = file("../akira-signing.jks")
+    signingConfigs {
+        if (akiraKeystore.exists()) {
+            create("akira") {
+                storeFile = akiraKeystore
+                storeType = "pkcs12"
+                storePassword = "IFuAsJmrjzsLDbqmORcTFQ9u"
+                keyAlias = "akira"
+                keyPassword = "IFuAsJmrjzsLDbqmORcTFQ9u"
+            }
+        }
     }
 
     buildTypes {
+        debug {
+            if (akiraKeystore.exists()) signingConfig = signingConfigs.getByName("akira")
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            if (akiraKeystore.exists()) signingConfig = signingConfigs.getByName("akira")
         }
     }
 

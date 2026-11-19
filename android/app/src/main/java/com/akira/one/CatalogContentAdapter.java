@@ -98,6 +98,10 @@ public class CatalogContentAdapter extends RecyclerView.Adapter<CatalogContentAd
         });
         h.itemView.setOnKeyListener((v, keyCode, event) -> {
             if (event.getAction() != KeyEvent.ACTION_DOWN) return false;
+            if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN || keyCode == KeyEvent.KEYCODE_DPAD_UP) {
+                RecyclerView rv = ListNav.parentList(v);
+                if (rv != null) return ListNav.step(rv, h.getBindingAdapterPosition(), keyCode == KeyEvent.KEYCODE_DPAD_DOWN ? 1 : -1);
+            }
             if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
                 listener.onMoveLeft();
                 return true;

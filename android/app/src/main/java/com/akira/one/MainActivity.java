@@ -75,6 +75,7 @@ public class MainActivity extends BaseActivity {
         findViewById(R.id.navHome).setSelected(true);
         findViewById(R.id.navHome).requestFocus();
         loadLaunchRow();
+        UpdateManager.checkOnStartup(this);
     }
 
     /** Mantém o conteúdo fora do notch/câmera mesmo em modo imersivo. */
@@ -227,7 +228,7 @@ public class MainActivity extends BaseActivity {
 
     private void bindActions() {
         // Navegação só pelo menu da esquerda.
-        findViewById(R.id.navHome).setOnClickListener(v -> findViewById(R.id.homeScroll).scrollTo(0, 0));
+        findViewById(R.id.navHome).setOnClickListener(v -> { /* já está na Início */ });
         findViewById(R.id.navSearch).setOnClickListener(v -> openSearch());
         findViewById(R.id.navLive).setOnClickListener(v -> openCatalog("live"));
         findViewById(R.id.navMovies).setOnClickListener(v -> openCatalog("movie"));

@@ -81,6 +81,9 @@ public class LoginActivity extends BaseActivity {
         };
         username.addTextChangedListener(clearOnType);
         password.addTextChangedListener(clearOnType);
+
+        // Atualização automática: confere se há versão nova no GitHub (uma vez por abertura).
+        UpdateManager.checkOnStartup(this);
     }
 
     /** Mostra o aviso vermelho (com tremidinha) e marca os campos com erro. */
