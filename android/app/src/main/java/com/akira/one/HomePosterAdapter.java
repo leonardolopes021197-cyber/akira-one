@@ -77,7 +77,7 @@ public class HomePosterAdapter extends RecyclerView.Adapter<HomePosterAdapter.Ho
             if (event.getAction() != android.view.KeyEvent.ACTION_DOWN) return false;
             if (keyCode == android.view.KeyEvent.KEYCODE_DPAD_RIGHT || keyCode == android.view.KeyEvent.KEYCODE_DPAD_LEFT) {
                 RecyclerView rv = ListNav.parentList(v);
-                if (rv != null) return ListNav.step(rv, h.getBindingAdapterPosition(), keyCode == android.view.KeyEvent.KEYCODE_DPAD_RIGHT ? 1 : -1);
+                if (rv != null) return ListNav.step(rv, h.getBindingAdapterPosition(), keyCode == android.view.KeyEvent.KEYCODE_DPAD_RIGHT ? 1 : -1, event);
             }
             return false;
         });

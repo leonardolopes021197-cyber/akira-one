@@ -100,6 +100,10 @@ public class CatalogActivity extends BaseActivity {
     private TextView infoWatchButton;
     private Runnable pendingInfoRunnable;
 
+    // Navegação suave e volta do player
+    private Runnable pendingFilterRunnable;
+    private String pendingRestoreKey = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,7 +130,7 @@ public class CatalogActivity extends BaseActivity {
                 if (isProtectedAdultCategory(item.id) && !adultSessionUnlocked) {
                     requestAdultPin(item, position);
                 } else {
-                    selectCategoryInternal(item, position);
+                    selectCategoryDebounced(item, position);
                 }
             }
 
@@ -163,8 +167,10 @@ public class CatalogActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         if (contentReady) {
+            flushPendingFilter();
             updateCategoryCounts();
             applyFilter();
+            restoreOpenedSelection();
         }
         if ("live".equals(type) && previewPlayer != null && previewWasPlaying) {
             previewWasPlaying = false;
@@ -659,6 +665,7 @@ public class CatalogActivity extends BaseActivity {
     }
 
     private void openLiveFullScreen(ContentItem item) {
+        pendingRestoreKey = item.key();
         ContentNavigator.open(this, item);
     }
 
@@ -886,6 +893,35 @@ public class CatalogActivity extends BaseActivity {
         categoryAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Ao passar pelas categorias com o controle, o destaque muda na hora, mas a lista de canais só é
+     * refeita quando o foco para por ~140 ms. Deixa a navegação mais suave e leve.
+     */
+    private void selectCategoryDebounced(CategoryItem category, int position) {
+        boolean changed = !currentCategory.equals(category.id);
+        currentCategory = category.id;
+        selectedCategoryPosition = Math.max(0, position);
+        categoryAdapter.setSelected(category.id);
+        selectedCategoryTitle.setText(cleanCategoryName(category.name));
+        if (!changed) return;
+        if (pendingFilterRunnable != null) previewHandler.removeCallbacks(pendingFilterRunnable);
+        pendingFilterRunnable = () -> {
+            pendingFilterRunnable = null;
+            applyFilter();
+            if ("live".equals(type)) clearPreview();
+        };
+        previewHandler.postDelayed(pendingFilterRunnable, 140L);
+    }
+
+    /** Aplica já o filtro que estava esperando (ex.: o usuário apertou direita logo após trocar de categoria). */
+    private void flushPendingFilter() {
+        if (pendingFilterRunnable == null) return;
+        previewHandler.removeCallbacks(pendingFilterRunnable);
+        Runnable r = pendingFilterRunnable;
+        pendingFilterRunnable = null;
+        r.run();
+    }
+
     private void selectCategoryInternal(CategoryItem category, int position) {
         boolean changed = !currentCategory.equals(category.id);
         currentCategory = category.id;
@@ -1039,7 +1075,29 @@ public class CatalogActivity extends BaseActivity {
 
     private String label() { return "live".equals(type) ? "Canal" : "movie".equals(type) ? "Filme" : "Série"; }
 
+    /** Volta do player: rola até o item que estava aberto e devolve o foco a ele. */
+    private void restoreOpenedSelection() {
+        if (pendingRestoreKey.isEmpty() || contentRecycler == null) return;
+        final String key = pendingRestoreKey;
+        pendingRestoreKey = "";
+        int found = -1;
+        for (int i = 0; i < shown.size(); i++) {
+            if (key.equals(shown.get(i).key())) { found = i; break; }
+        }
+        if (found < 0) return;
+        final int target = found;
+        RecyclerView.LayoutManager lm = contentRecycler.getLayoutManager();
+        if (lm instanceof LinearLayoutManager) {
+            // Deixa o item no terço de cima da lista, com os vizinhos visíveis.
+            ((LinearLayoutManager) lm).scrollToPositionWithOffset(target, Math.max(0, contentRecycler.getHeight() / 3));
+        } else {
+            contentRecycler.scrollToPosition(target);
+        }
+        contentRecycler.post(() -> ListNav.focus(contentRecycler, target));
+    }
+
     private void focusFirstContent() {
+        flushPendingFilter();
         if (shown.isEmpty()) return;
         contentRecycler.scrollToPosition(0);
         contentRecycler.post(() -> {
@@ -1082,5 +1140,8 @@ public class CatalogActivity extends BaseActivity {
                 .show();
     }
 
-    private void openItem(ContentItem item) { ContentNavigator.open(this, item); }
+    private void openItem(ContentItem item) {
+        pendingRestoreKey = item.key();
+        ContentNavigator.open(this, item);
+    }
 }

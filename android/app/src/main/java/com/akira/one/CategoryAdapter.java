@@ -75,7 +75,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.H> {
             if (event.getAction() == KeyEvent.ACTION_DOWN
                     && (keyCode == KeyEvent.KEYCODE_DPAD_DOWN || keyCode == KeyEvent.KEYCODE_DPAD_UP)) {
                 RecyclerView rv = ListNav.parentList(v);
-                if (rv != null) return ListNav.step(rv, h.getBindingAdapterPosition(), keyCode == KeyEvent.KEYCODE_DPAD_DOWN ? 1 : -1);
+                if (rv != null) return ListNav.step(rv, h.getBindingAdapterPosition(), keyCode == KeyEvent.KEYCODE_DPAD_DOWN ? 1 : -1, event);
             }
             if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
                 listener.onMoveRight();

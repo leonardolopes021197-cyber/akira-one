@@ -1,3 +1,8 @@
+# AKIRA ONE 1.12.2 — Navegação mais suave e volta do player no mesmo lugar
+
+- Navegação mais suave: ao segurar a seta nas listas (categorias, canais, filmes, séries, lançamentos) o foco anda no máximo ~9 itens por segundo, em vez de disparar. Ao passar pelas categorias, o destaque muda na hora, mas a lista de canais só é refeita quando o foco para por um instante (antes era refeita a cada passo, o que pesava e atropelava a navegação). A velocidade pode ser ajustada em ListNav.REPEAT_INTERVAL_MS.
+- Ao voltar do player, a lista abre no mesmo canal (ou filme/série) que estava aberto, com a seleção e o foco nele. Antes a lista era refeita e o foco se perdia.
+
 # AKIRA ONE 1.12.1 — Corrige tremor na Início e foco pulando para o menu
 
 - Corrigido: a tela de Início tremia na TV. A área principal ficava dentro de um ScrollView com alturas por peso e lista de pôsteres, e as medidas oscilavam sem parar. Agora a Início tem altura fixa da tela e banner e lançamentos dividem o espaço por peso.

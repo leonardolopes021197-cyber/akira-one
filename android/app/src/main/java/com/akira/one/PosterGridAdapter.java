@@ -102,11 +102,13 @@ public class PosterGridAdapter extends RecyclerView.Adapter<PosterGridAdapter.Ho
                             if (pos / span < (count - 1) / span) target = count - 1;
                             else return true;
                         }
+                        if (!ListNav.allow(event)) return true;
                         ListNav.focus(rv, target);
                         return true;
                     }
                     int target = pos - span;
                     if (target < 0) return false; // primeira linha: pode subir (busca)
+                    if (!ListNav.allow(event)) return true;
                     ListNav.focus(rv, target);
                     return true;
                 }
