@@ -1,3 +1,8 @@
+# AKIRA ONE 1.12.3 — Esquerda nos canais volta para as categorias
+
+- Corrigido: na TV ao Vivo, apertar para a esquerda a partir da lista de canais levava o foco para o botão "TV ao Vivo" do menu lateral. Agora vai para a categoria selecionada.
+- No painel de EPG, esquerda a partir de ASSISTIR ou do coração volta para o canal selecionado na lista.
+
 # AKIRA ONE 1.12.2 — Navegação mais suave e volta do player no mesmo lugar
 
 - Navegação mais suave: ao segurar a seta nas listas (categorias, canais, filmes, séries, lançamentos) o foco anda no máximo ~9 itens por segundo, em vez de disparar. Ao passar pelas categorias, o destaque muda na hora, mas a lista de canais só é refeita quando o foco para por um instante (antes era refeita a cada passo, o que pesava e atropelava a navegação). A velocidade pode ser ajustada em ListNav.REPEAT_INTERVAL_MS.

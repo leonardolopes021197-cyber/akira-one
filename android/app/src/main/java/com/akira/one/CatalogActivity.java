@@ -214,10 +214,7 @@ public class CatalogActivity extends BaseActivity {
                 @Override public void onClick(ContentItem item) { openLiveFullScreen(item); }
                 @Override public void onLongClick(ContentItem item) { context(item); }
                 @Override public void onFocus(ContentItem item) { scheduleLiveInfo(item); }
-                @Override public void onMoveLeft() {
-                    View rail = findViewById(R.id.railLive);
-                    if (rail != null) rail.requestFocus(); else focusSelectedCategory();
-                }
+                @Override public void onMoveLeft() { focusSelectedCategory(); }
                 @Override public void onMoveRight() {
                     if (infoWatchButton != null) infoWatchButton.requestFocus();
                 }
@@ -311,6 +308,31 @@ public class CatalogActivity extends BaseActivity {
                 if (previewItem != null) openLiveFullScreen(previewItem);
             });
         }
+
+        // Esquerda no painel de EPG volta para o canal selecionado na lista.
+        View.OnKeyListener backToChannel = (v, keyCode, event) -> {
+            if (event.getAction() == android.view.KeyEvent.ACTION_DOWN
+                    && keyCode == android.view.KeyEvent.KEYCODE_DPAD_LEFT) {
+                focusCurrentChannel();
+                return true;
+            }
+            return false;
+        };
+        if (infoWatchButton != null) infoWatchButton.setOnKeyListener(backToChannel);
+        if (infoHeart != null) infoHeart.setOnKeyListener(backToChannel);
+    }
+
+    /** Foca na lista o canal que está mostrando o EPG (ou o primeiro, se não houver). */
+    private void focusCurrentChannel() {
+        int pos = -1;
+        if (previewItem != null) {
+            String key = previewItem.key();
+            for (int i = 0; i < shown.size(); i++) {
+                if (key.equals(shown.get(i).key())) { pos = i; break; }
+            }
+        }
+        if (pos < 0) { focusFirstContent(); return; }
+        ListNav.focus(contentRecycler, pos);
     }
 
     /** Atualiza a coluna do EPG do canal focado, com um pequeno atraso para não pedir a cada rolagem. */
