@@ -1,3 +1,15 @@
+# AKIRA ONE 1.13.0 — Novas funções nas Configurações
+
+- Configurações ganhou uma grade de preferências (2 colunas, cada item mostra o valor atual): Controle dos Pais (leva à troca de senha dos canais adultos), Mudar lista de reprodução, Adicionar lista de reprodução, Classificação de canais ao vivo, Formato de transmissão ao vivo, Ocultar categorias (ao vivo, filmes e séries), Limpar histórico (canais, filmes e séries), Ocultar relógio, Permitir protocolo e Atualizar lista agora.
+- Listas de reprodução: ao entrar com uma conta, ela fica salva no aparelho. Em "Mudar lista de reprodução" você troca entre as contas salvas sem digitar de novo (segure OK numa conta para removê-la). "Adicionar lista" valida usuário e senha e já carrega a nova playlist. No modo painel, a troca abre a tela de listas do painel.
+- Classificação de canais ao vivo: padrão do provedor, A → Z ou Z → A (ignora acentos, maiúsculas e emojis no início do nome).
+- Formato de transmissão ao vivo: Automático, TS ou HLS (m3u8). O escolhido é tentado primeiro e os outros ficam de reserva.
+- Ocultar categorias: escolha quais categorias não aparecem; os itens delas também somem de "Tudo". Vale por conta.
+- Limpar histórico: mostra quantos itens há e pede confirmação; quando está vazio mostra "Não há ... vistos recentemente.".
+- Ocultar relógio: esconde o relógio da Início e da TV ao Vivo.
+- Permitir protocolo: liga/desliga o redirecionamento entre HTTP e HTTPS no player (padrão: ligado).
+- Não incluído: "Mudar idioma", porque todos os textos do app estão em português e teriam que ser traduzidos.
+
 # AKIRA ONE 1.12.3 — Esquerda nos canais volta para as categorias
 
 - Corrigido: na TV ao Vivo, apertar para a esquerda a partir da lista de canais levava o foco para o botão "TV ao Vivo" do menu lateral. Agora vai para a categoria selecionada.

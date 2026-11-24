@@ -10,8 +10,8 @@ android {
         applicationId = "com.akira.one"
         minSdk = 23
         targetSdk = 35
-        versionCode = 35
-        versionName = "1.12.3"
+        versionCode = 36
+        versionName = "1.13.0"
     }
 
     // Chave de assinatura FIXA do AKIRA ONE (android/akira-signing.jks).

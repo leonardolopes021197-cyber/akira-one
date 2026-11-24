@@ -116,7 +116,7 @@ public class PlayerActivity extends BaseActivity {
 
         DefaultHttpDataSource.Factory httpFactory = new DefaultHttpDataSource.Factory()
                 .setUserAgent("Mozilla/5.0 (Linux; Android) AppleWebKit/537.36 AkiraTV/1.7.10")
-                .setAllowCrossProtocolRedirects(true)
+                .setAllowCrossProtocolRedirects(Prefs.allowCrossProtocol(this))
                 .setConnectTimeoutMs(15000)
                 .setReadTimeoutMs(30000);
         DefaultDataSource.Factory dataSourceFactory = new DefaultDataSource.Factory(this, httpFactory);

@@ -143,6 +143,7 @@ public class CatalogActivity extends BaseActivity {
         if ("live".equals(type)) {
             setupRail();
             setupLiveInfoPanel();
+            applyClockPref();
         }
 
         search.addTextChangedListener(new TextWatcher() {
@@ -166,6 +167,7 @@ public class CatalogActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if ("live".equals(type)) applyClockPref();
         if (contentReady) {
             flushPendingFilter();
             updateCategoryCounts();
@@ -764,11 +766,13 @@ public class CatalogActivity extends BaseActivity {
         allCategories.add(new CategoryItem(CAT_RECENT, "Assistidos recentemente", 0));
         if (isPosterGrid()) allCategories.add(new CategoryItem(CAT_CONTINUE, "Continuar assistindo", 0));
 
+        Set<String> hiddenCategories = Prefs.hiddenCategories(this, type);
         if (array != null) {
             for (int i = 0; i < array.length(); i++) {
                 JSONObject object = array.optJSONObject(i);
                 if (object == null) continue;
                 String id = object.optString("category_id");
+                if (hiddenCategories.contains(id)) continue; // Configurações > Ocultar categorias
                 String rawName = object.optString("category_name", "Categoria");
                 boolean adult = "live".equals(type) && isAdultCategoryName(rawName);
                 if (adult) adultCategoryIds.add(id);
@@ -862,10 +866,12 @@ public class CatalogActivity extends BaseActivity {
         liveCategoryIdsByDisplayKey.clear();
 
         List<ContentItem> rawItems = new ArrayList<>();
+        Set<String> hiddenCategories = Prefs.hiddenCategories(this, type);
         if (array != null) {
             for (int i = 0; i < array.length(); i++) {
                 JSONObject object = array.optJSONObject(i);
                 if (object == null) continue;
+                if (hiddenCategories.contains(object.optString("category_id", ""))) continue; // categoria oculta
                 String id = "series".equals(type) ? object.optString("series_id") : object.optString("stream_id");
                 String icon = "series".equals(type) ? object.optString("cover") : object.optString("stream_icon");
                 String ext = object.optString("container_extension", "mp4");
@@ -883,6 +889,7 @@ public class CatalogActivity extends BaseActivity {
                 if (raw.categoryId != null && !raw.categoryId.isBlank()) categoryIds.add(raw.categoryId);
                 liveCategoryIdsByDisplayKey.put(raw.key(), categoryIds);
             }
+            sortLiveChannels();
         } else {
             masterItems.addAll(rawItems);
         }
@@ -891,6 +898,27 @@ public class CatalogActivity extends BaseActivity {
         updateCategoryCounts();
         applyCategoryFilter();
         applyFilter();
+    }
+
+    /** Configurações > Classificação de canais ao vivo: A → Z, Z → A ou a ordem do provedor. */
+    private void sortLiveChannels() {
+        String mode = Prefs.liveSort(this);
+        if (!"az".equals(mode) && !"za".equals(mode)) return;
+        final java.text.Collator collator = java.text.Collator.getInstance(new Locale("pt", "BR"));
+        collator.setStrength(java.text.Collator.PRIMARY); // ignora acentos e maiúsculas
+        java.util.Collections.sort(masterItems, (a, b) -> collator.compare(sortKey(a.name), sortKey(b.name)));
+        if ("za".equals(mode)) java.util.Collections.reverse(masterItems);
+    }
+
+    /** Tira emojis/símbolos do começo do nome para ordenar pelo nome de verdade. */
+    private static String sortKey(String name) {
+        return name == null ? "" : name.replaceFirst("^[^\\p{L}\\p{N}]+", "").trim();
+    }
+
+    /** Configurações > Ocultar relógio. */
+    private void applyClockPref() {
+        View clock = findViewById(R.id.liveClock);
+        if (clock != null) clock.setVisibility(Prefs.hideClock(this) ? View.GONE : View.VISIBLE);
     }
 
     private void updateCategoryCounts() {

@@ -123,6 +123,15 @@ public final class XtreamClient {
         }
         formats.add("ts");
         formats.add("m3u8");
+
+        // Configurações > Formato de transmissão ao vivo: o escolhido vai na frente (os outros ficam de reserva).
+        String pick = Prefs.liveFormatPref(c);
+        if ("ts".equals(pick) || "m3u8".equals(pick)) {
+            LinkedHashSet<String> ordered = new LinkedHashSet<>();
+            ordered.add(pick);
+            ordered.addAll(formats);
+            return new ArrayList<>(ordered);
+        }
         return new ArrayList<>(formats);
     }
 

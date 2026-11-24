@@ -123,6 +123,7 @@ public class LoginActivity extends BaseActivity {
         ServerPool.login(this, user, pass, new ServerPool.LoginCallback() {
             @Override public void onSuccess(String serverUrl) {
                 setLoading(false);
+                Prefs.rememberAccount(LoginActivity.this, user, pass);
                 // Outra conta: esquece o catálogo e os downloads da conta anterior.
                 if (!user.equals(previousUser)) CatalogCache.clearAll(LoginActivity.this);
                 status.setTextColor(getColor(R.color.akira_green));

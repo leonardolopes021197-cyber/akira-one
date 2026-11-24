@@ -173,6 +173,7 @@
                 android:textSize="11sp" />
 
             <TextClock
+                android:id="@+id/liveClock"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-light"

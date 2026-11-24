@@ -426,6 +426,105 @@ public final class Prefs {
         } catch (Exception ignored) {}
     }
 
+    // ---------------- Preferências das Configurações ----------------
+
+    private static final String HIDDEN_CATEGORIES_KEY = "hidden_categories_json";
+    private static final String ACCOUNTS_KEY = "saved_accounts_json";
+
+    /** Ordem dos canais ao vivo: "default" (como vem do provedor), "az" ou "za". */
+    public static String liveSort(Context c) { return p(c).getString("live_sort", "default"); }
+    public static void setLiveSort(Context c, String v) { p(c).edit().putString("live_sort", v).apply(); }
+
+    /** Formato preferido para o ao vivo: "auto", "ts" ou "m3u8" (os outros ficam de reserva). */
+    public static String liveFormatPref(Context c) { return p(c).getString("live_format_pref", "auto"); }
+    public static void setLiveFormatPref(Context c, String v) { p(c).edit().putString("live_format_pref", v).apply(); }
+
+    public static boolean hideClock(Context c) { return p(c).getBoolean("hide_clock", false); }
+    public static void setHideClock(Context c, boolean v) { p(c).edit().putBoolean("hide_clock", v).apply(); }
+
+    /** Permite o player seguir redirecionamentos entre HTTP e HTTPS (padrão: ligado). */
+    public static boolean allowCrossProtocol(Context c) { return p(c).getBoolean("allow_cross_protocol", true); }
+    public static void setAllowCrossProtocol(Context c, boolean v) { p(c).edit().putBoolean("allow_cross_protocol", v).apply(); }
+
+    /** Categorias ocultas (por conta e por tipo: live, movie, series). */
+    public static java.util.Set<String> hiddenCategories(Context c, String type) {
+        java.util.Set<String> out = new java.util.HashSet<>();
+        JSONArray a = scopedObject(c, HIDDEN_CATEGORIES_KEY).optJSONArray(type);
+        if (a != null) for (int i = 0; i < a.length(); i++) out.add(a.optString(i));
+        return out;
+    }
+
+    public static void setHiddenCategories(Context c, String type, java.util.Set<String> ids) {
+        try {
+            JSONObject scoped = scopedObject(c, HIDDEN_CATEGORIES_KEY);
+            JSONArray a = new JSONArray();
+            if (ids != null) for (String id : ids) a.put(id);
+            scoped.put(type, a);
+            saveScopedObject(c, HIDDEN_CATEGORIES_KEY, scoped);
+        } catch (Exception ignored) {}
+    }
+
+    /** Apaga o histórico de assistidos de um tipo (live, movie ou series). */
+    public static void clearRecent(Context c, String type) {
+        JSONObject scoped = scopedObject(c, RECENTS_KEY);
+        JSONArray names = scoped.names();
+        if (names == null) return;
+        List<String> remove = new ArrayList<>();
+        for (int i = 0; i < names.length(); i++) {
+            String name = names.optString(i);
+            JSONObject record = scoped.optJSONObject(name);
+            JSONObject itemJson = record == null ? null : record.optJSONObject("item");
+            if (itemJson != null && type.equals(ContentItem.fromJson(itemJson).type)) remove.add(name);
+        }
+        for (String name : remove) scoped.remove(name);
+        saveScopedObject(c, RECENTS_KEY, scoped);
+    }
+
+    // ---------------- Listas (contas) salvas neste aparelho ----------------
+
+    /** Guarda a conta para poder trocar de lista depois sem digitar de novo. */
+    public static void rememberAccount(Context c, String user, String pass) {
+        if (user == null || user.isBlank() || pass == null || pass.isEmpty()) return;
+        try {
+            JSONArray old = new JSONArray(p(c).getString(ACCOUNTS_KEY, "[]"));
+            JSONArray next = new JSONArray();
+            for (int i = 0; i < old.length(); i++) {
+                JSONObject o = old.optJSONObject(i);
+                if (o != null && !user.equals(o.optString("user"))) next.put(o);
+            }
+            JSONObject mine = new JSONObject();
+            mine.put("user", user);
+            mine.put("pass", pass);
+            next.put(mine);
+            p(c).edit().putString(ACCOUNTS_KEY, next.toString()).apply();
+        } catch (Exception ignored) {}
+    }
+
+    /** Cada item: {usuário, senha}. */
+    public static List<String[]> savedAccounts(Context c) {
+        List<String[]> out = new ArrayList<>();
+        try {
+            JSONArray a = new JSONArray(p(c).getString(ACCOUNTS_KEY, "[]"));
+            for (int i = 0; i < a.length(); i++) {
+                JSONObject o = a.optJSONObject(i);
+                if (o != null) out.add(new String[]{o.optString("user"), o.optString("pass")});
+            }
+        } catch (Exception ignored) {}
+        return out;
+    }
+
+    public static void removeAccount(Context c, String user) {
+        try {
+            JSONArray old = new JSONArray(p(c).getString(ACCOUNTS_KEY, "[]"));
+            JSONArray next = new JSONArray();
+            for (int i = 0; i < old.length(); i++) {
+                JSONObject o = old.optJSONObject(i);
+                if (o != null && !o.optString("user").equals(user)) next.put(o);
+            }
+            p(c).edit().putString(ACCOUNTS_KEY, next.toString()).apply();
+        } catch (Exception ignored) {}
+    }
+
     // ---------------- Controle parental / canais adultos ----------------
 
     public static String adultPin(Context c) {

@@ -69,6 +69,7 @@ public class MainActivity extends BaseActivity {
         }
 
         applySafeInsets();
+        applyClockPref();
         setupHero();
         setupLaunchRow();
         bindActions();
@@ -79,6 +80,12 @@ public class MainActivity extends BaseActivity {
     }
 
     /** Mantém o conteúdo fora do notch/câmera mesmo em modo imersivo. */
+    /** Configurações > Ocultar relógio. */
+    private void applyClockPref() {
+        View clock = findViewById(R.id.homeClock);
+        if (clock != null) clock.setVisibility(Prefs.hideClock(this) ? View.GONE : View.VISIBLE);
+    }
+
     private void applySafeInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
             Insets safe = insets.getInsets(
@@ -248,6 +255,7 @@ public class MainActivity extends BaseActivity {
         } else {
             connectPanel();
         }
+        applyClockPref();
         if (launchAdapter != null && launchAdapter.getItemCount() == 0) {
             handler.removeCallbacksAndMessages(null);
             launchAttempts = 0;
