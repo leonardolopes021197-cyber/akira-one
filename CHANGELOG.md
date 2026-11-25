@@ -1,3 +1,14 @@
+# AKIRA ONE 1.14.0 — TV ao Vivo igual à referência, com vídeo na direita
+
+- Tela de canais refeita nas 4 áreas da referência: menu lateral, categorias (~20%), canais (~28%) e painel de reprodução (~52%).
+- Menu lateral com 10 ícones em botões arredondados (selecionado com contorno azul): Pesquisar, Início, TV ao Vivo, Rádio, Filmes, Séries, Atualizar conteúdo, Perfil, Configurações e Sair. Rádio abre a categoria de rádios da lista (se existir); Perfil mostra usuário, vencimento e ID do aparelho; Atualizar recarrega a playlist.
+- Painel de reprodução: vídeo 16:9 com os cantos de cima arredondados, nome do canal, coração de favorito, programação atual em amarelo (início ~ fim + programa), próximos programas e botões EPG e Adicionar aos favoritos.
+- OK em um canal toca no painel; OK de novo no mesmo canal (ou OK no vídeo) abre em tela cheia. O vídeo continua tocando enquanto você navega por categorias e canais. Ao abrir a tela cheia, o preview é parado para liberar a conexão da lista e volta a tocar quando você retorna.
+- Preview leve: no máximo 720p, um único player reaproveitado, e parado automaticamente quando a tela sai da frente.
+- Lista de canais com selo de qualidade (SD, HD, FHD, 4K) lido do nome, número, logo, nome e o programa em andamento embaixo do nome.
+- Cabeçalho com logo, título, data e hora e indicador de conexão (verde online, vermelho sem internet). Tecla Menu do controle abre as opções do canal. Esquerda/direita andam entre os painéis.
+- Atenção: contas que permitem só 1 conexão por vez: o preview usa essa conexão, mas ela é liberada antes da tela cheia e ao sair da tela.
+
 # AKIRA ONE 1.13.0 — Novas funções nas Configurações
 
 - Configurações ganhou uma grade de preferências (2 colunas, cada item mostra o valor atual): Controle dos Pais (leva à troca de senha dos canais adultos), Mudar lista de reprodução, Adicionar lista de reprodução, Classificação de canais ao vivo, Formato de transmissão ao vivo, Ocultar categorias (ao vivo, filmes e séries), Limpar histórico (canais, filmes e séries), Ocultar relógio, Permitir protocolo e Atualizar lista agora.

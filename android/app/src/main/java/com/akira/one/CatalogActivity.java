@@ -92,13 +92,15 @@ public class CatalogActivity extends BaseActivity {
     private final Handler previewHandler = new Handler(Looper.getMainLooper());
     private Runnable pendingPreviewRunnable;
 
-    // TV ao vivo: painel de informações do canal (sem vídeo)
-    private android.widget.ImageView infoLogo;
+    // TV ao vivo: painel de reprodução (vídeo + EPG)
+    private View previewFrame;
+    private View connDot;
     private android.widget.ImageView infoHeart;
     private TextView infoEpgStatus;
     private android.widget.LinearLayout infoEpgList;
-    private TextView infoWatchButton;
-    private Runnable pendingInfoRunnable;
+    private ContentItem lastFocusedItem;
+    private boolean resumePreview = false;
+    private final Runnable connDotRunnable = this::updateConnectionDot;
 
     // Navegação suave e volta do player
     private Runnable pendingFilterRunnable;
@@ -142,8 +144,10 @@ public class CatalogActivity extends BaseActivity {
         setupContentRecycler();
         if ("live".equals(type)) {
             setupRail();
+            setupLivePreview();
             setupLiveInfoPanel();
             applyClockPref();
+            updateConnectionDot();
         }
 
         search.addTextChangedListener(new TextWatcher() {
@@ -174,19 +178,44 @@ public class CatalogActivity extends BaseActivity {
             applyFilter();
             restoreOpenedSelection();
         }
-        if ("live".equals(type) && previewPlayer != null && previewWasPlaying) {
-            previewWasPlaying = false;
-            previewPlayer.play();
+        if ("live".equals(type)) {
+            updateConnectionDot();
+            // Voltou do player/outra tela: retoma o canal que estava tocando.
+            if (resumePreview && previewItem != null) {
+                resumePreview = false;
+                startPreview(previewItem);
+            }
         }
     }
 
     @Override
-    protected void onPause() {
-        if (previewPlayer != null) {
-            previewWasPlaying = previewPlayer.isPlaying();
-            previewPlayer.pause();
+    protected void onStop() {
+        // Libera a conexão do preview sempre que a tela sai da frente (tela cheia, outra tela, TV desligada).
+        if ("live".equals(type)) stopPreviewPlayback(true);
+        super.onStop();
+    }
+
+    /** Para o vídeo do preview. resumeLater = volta a tocar o mesmo canal quando a tela voltar. */
+    private void stopPreviewPlayback(boolean resumeLater) {
+        if (previewPlayer != null && previewItem != null) {
+            previewPlayer.stop();
+            previewPlayer.clearMediaItems();
         }
-        super.onPause();
+        previewReady = false;
+        if (resumeLater && previewItem != null) resumePreview = true;
+    }
+
+    /** Menu do controle: mesmas opções do "segurar OK" no canal. */
+    @Override
+    public boolean onKeyUp(int keyCode, android.view.KeyEvent event) {
+        if (keyCode == android.view.KeyEvent.KEYCODE_MENU && "live".equals(type)) {
+            ContentItem target = lastFocusedItem != null ? lastFocusedItem : previewItem;
+            if (target != null) {
+                context(target);
+                return true;
+            }
+        }
+        return super.onKeyUp(keyCode, event);
     }
 
     @Override
@@ -213,12 +242,12 @@ public class CatalogActivity extends BaseActivity {
         } else {
             contentRecycler.setLayoutManager(new LinearLayoutManager(this));
             liveAdapter = new CatalogContentAdapter(shown, new CatalogContentAdapter.Listener() {
-                @Override public void onClick(ContentItem item) { openLiveFullScreen(item); }
+                @Override public void onClick(ContentItem item) { handleLiveClick(item); }
                 @Override public void onLongClick(ContentItem item) { context(item); }
-                @Override public void onFocus(ContentItem item) { scheduleLiveInfo(item); }
+                @Override public void onFocus(ContentItem item) { lastFocusedItem = item; }
                 @Override public void onMoveLeft() { focusSelectedCategory(); }
                 @Override public void onMoveRight() {
-                    if (infoWatchButton != null) infoWatchButton.requestFocus();
+                    if (previewFrame != null) previewFrame.requestFocus();
                 }
             });
             // Sem animação de "troca": ela recriaria a linha focada ao marcar o canal selecionado.
@@ -254,9 +283,11 @@ public class CatalogActivity extends BaseActivity {
         bindRail(R.id.railSearch, () -> startActivity(new Intent(this, SearchActivity.class)));
         bindRail(R.id.railHome, this::finish);
         bindRail(R.id.railLive, () -> { /* já está em TV ao Vivo */ });
+        bindRail(R.id.railRadio, this::openRadioCategory);
         bindRail(R.id.railMovies, () -> switchCatalog("movie"));
         bindRail(R.id.railSeries, () -> switchCatalog("series"));
-        bindRail(R.id.railFavorites, () -> startActivity(new Intent(this, FavoritesActivity.class)));
+        bindRail(R.id.railRefresh, this::refreshContent);
+        bindRail(R.id.railProfile, this::showProfile);
         bindRail(R.id.railSettings, () -> startActivity(new Intent(this, SettingsActivity.class)));
         bindRail(R.id.railLogout, this::confirmLogout);
     }
@@ -294,24 +325,21 @@ public class CatalogActivity extends BaseActivity {
     // ------------------------------------------------------------ Informações do canal (sem vídeo)
 
     private void setupLiveInfoPanel() {
-        previewTitle = findViewById(R.id.previewChannelTitle);
-        previewEpgButton = findViewById(R.id.previewEpgButton);
-        previewFavoriteButton = findViewById(R.id.previewFavoriteButton);
-        infoLogo = findViewById(R.id.infoLogo);
+        previewFrame = findViewById(R.id.previewFrame);
         infoHeart = findViewById(R.id.infoHeart);
         infoEpgStatus = findViewById(R.id.infoEpgStatus);
         infoEpgList = findViewById(R.id.infoEpgList);
-        infoWatchButton = findViewById(R.id.infoWatchButton);
+        connDot = findViewById(R.id.connDot);
 
-        if (previewEpgButton != null) previewEpgButton.setOnClickListener(v -> openPreviewEpg());
         if (infoHeart != null) infoHeart.setOnClickListener(v -> togglePreviewFavorite());
-        if (infoWatchButton != null) {
-            infoWatchButton.setOnClickListener(v -> {
+        // OK no vídeo abre o canal em tela cheia.
+        if (previewFrame != null) {
+            previewFrame.setOnClickListener(v -> {
                 if (previewItem != null) openLiveFullScreen(previewItem);
             });
         }
 
-        // Esquerda no painel de EPG volta para o canal selecionado na lista.
+        // Esquerda no painel de reprodução volta para o canal selecionado na lista.
         View.OnKeyListener backToChannel = (v, keyCode, event) -> {
             if (event.getAction() == android.view.KeyEvent.ACTION_DOWN
                     && keyCode == android.view.KeyEvent.KEYCODE_DPAD_LEFT) {
@@ -320,11 +348,51 @@ public class CatalogActivity extends BaseActivity {
             }
             return false;
         };
-        if (infoWatchButton != null) infoWatchButton.setOnKeyListener(backToChannel);
-        if (infoHeart != null) infoHeart.setOnKeyListener(backToChannel);
+        View[] leftEdge = {previewFrame, infoHeart, previewEpgButton};
+        for (View v : leftEdge) if (v != null) v.setOnKeyListener(backToChannel);
+
+        // Esquerda nas categorias vai para o menu lateral (TV ao Vivo).
+        categoriesRecycler.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
+            @Override public void onChildViewAttachedToWindow(@NonNull View view) { view.setNextFocusLeftId(R.id.railLive); }
+            @Override public void onChildViewDetachedFromWindow(@NonNull View view) {}
+        });
+
+        // Vídeo sempre 16:9, mas nunca mais alto que 56% do painel (telas baixas).
+        final View panel = findViewById(R.id.livePreviewPanel);
+        if (panel != null && previewFrame != null) {
+            panel.addOnLayoutChangeListener((v, l, t, r, b, oldL, oldT, oldR, oldB) -> sizePreviewFrame(panel));
+            panel.post(() -> sizePreviewFrame(panel));
+        }
     }
 
-    /** Foca na lista o canal que está mostrando o EPG (ou o primeiro, se não houver). */
+    private void sizePreviewFrame(View panel) {
+        int w = panel.getWidth();
+        int h = panel.getHeight();
+        if (w <= 0 || h <= 0 || previewFrame == null) return;
+        int target = Math.min(w * 9 / 16, (int) (h * 0.56f));
+        android.view.ViewGroup.LayoutParams lp = previewFrame.getLayoutParams();
+        if (Math.abs(lp.height - target) > 1) {
+            lp.height = target;
+            previewFrame.setLayoutParams(lp);
+        }
+    }
+
+    /** Indicador verde (online) / vermelho (sem internet) ao lado da hora. */
+    private void updateConnectionDot() {
+        if (connDot == null) return;
+        boolean online = false;
+        try {
+            android.net.ConnectivityManager cm = (android.net.ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+            android.net.Network net = cm == null ? null : cm.getActiveNetwork();
+            android.net.NetworkCapabilities caps = net == null ? null : cm.getNetworkCapabilities(net);
+            online = caps != null && caps.hasCapability(android.net.NetworkCapabilities.NET_CAPABILITY_INTERNET);
+        } catch (Exception ignored) {}
+        connDot.setBackgroundResource(online ? R.drawable.bg_dot_green : R.drawable.bg_dot_red);
+        previewHandler.removeCallbacks(connDotRunnable);
+        previewHandler.postDelayed(connDotRunnable, 15000L);
+    }
+
+    /** Foca na lista o canal que está tocando (ou o primeiro, se não houver). */
     private void focusCurrentChannel() {
         int pos = -1;
         if (previewItem != null) {
@@ -337,29 +405,9 @@ public class CatalogActivity extends BaseActivity {
         ListNav.focus(contentRecycler, pos);
     }
 
-    /** Atualiza a coluna do EPG do canal focado, com um pequeno atraso para não pedir a cada rolagem. */
-    private void scheduleLiveInfo(ContentItem item) {
-        if (!"live".equals(type) || item == null || previewTitle == null) return;
-        if (pendingInfoRunnable != null) previewHandler.removeCallbacks(pendingInfoRunnable);
-        pendingInfoRunnable = () -> showLiveInfo(item);
-        previewHandler.postDelayed(pendingInfoRunnable, 300L);
-    }
-
-    private void showLiveInfo(final ContentItem item) {
-        previewItem = item;
-        previewTitle.setText(item.name);
-        if (liveAdapter != null) liveAdapter.setSelectedItem(item);
-        if (infoLogo != null) {
-            if (item.icon != null && !item.icon.isBlank()) {
-                com.bumptech.glide.Glide.with(this).load(item.icon).centerInside()
-                        .placeholder(R.drawable.akira_icon).into(infoLogo);
-            } else {
-                infoLogo.setImageResource(R.drawable.akira_icon);
-            }
-        }
-        updatePreviewFavoriteButton();
+    /** Busca o EPG do canal que está tocando. */
+    private void loadEpg(final ContentItem item) {
         showEpgStatus("Carregando programação…");
-
         final String key = item.key();
         XtreamClient.getShortEpg(this, item.id, new XtreamClient.ObjectCallback() {
             @Override public void onSuccess(JSONObject o) {
@@ -383,7 +431,7 @@ public class CatalogActivity extends BaseActivity {
         }
     }
 
-    /** Lista os próximos programas; o que está no ar fica destacado, com barra de progresso. */
+    /** Programa atual em amarelo (início ~ fim + nome) e os próximos logo abaixo, como na referência. */
     private void applyEpg(JSONObject o) {
         if (infoEpgList == null) return;
         JSONArray a = o == null ? null : o.optJSONArray("epg_listings");
@@ -391,21 +439,25 @@ public class CatalogActivity extends BaseActivity {
 
         java.text.SimpleDateFormat fmt = new java.text.SimpleDateFormat("HH:mm", Locale.getDefault());
         long nowSec = System.currentTimeMillis() / 1000L;
-        List<long[]> times = new ArrayList<>();
-        List<String> titles = new ArrayList<>();
+        List<String> lines = new ArrayList<>();
+        boolean firstIsCurrent = false;
         if (a != null) {
-            for (int i = 0; i < a.length(); i++) {
+            for (int i = 0; i < a.length() && lines.size() < 6; i++) {
                 JSONObject e = a.optJSONObject(i);
                 if (e == null) continue;
                 long start = e.optLong("start_timestamp", 0L);
                 long stop = e.optLong("stop_timestamp", 0L);
                 if (stop > 0 && nowSec >= stop) continue; // já terminou
                 String title = EpgNowCache.decode(e.optString("title", ""));
-                times.add(new long[]{start, stop});
-                titles.add(title.isEmpty() ? "Sem título" : title);
+                if (title.isEmpty()) title = "Sem título";
+                String range = start > 0 && stop > start
+                        ? fmt.format(new java.util.Date(start * 1000L)) + " ~ " + fmt.format(new java.util.Date(stop * 1000L))
+                        : "--:--";
+                if (lines.isEmpty()) firstIsCurrent = start > 0 && nowSec >= start;
+                lines.add(range + "  " + title);
             }
         }
-        if (titles.isEmpty()) {
+        if (lines.isEmpty()) {
             showEpgStatus("Programação indisponível para este canal");
             return;
         }
@@ -413,34 +465,48 @@ public class CatalogActivity extends BaseActivity {
         infoEpgList.removeAllViews();
         if (infoEpgStatus != null) infoEpgStatus.setVisibility(View.GONE);
         android.view.LayoutInflater inflater = android.view.LayoutInflater.from(this);
-        for (int i = 0; i < titles.size() && i < 8; i++) {
-            long start = times.get(i)[0];
-            long stop = times.get(i)[1];
-            boolean hasTimes = start > 0 && stop > start;
-            boolean current = hasTimes && nowSec >= start && nowSec < stop;
-
-            View row = inflater.inflate(R.layout.item_epg_row, infoEpgList, false);
-            TextView time = row.findViewById(R.id.epgRowTime);
-            TextView title = row.findViewById(R.id.epgRowTitle);
-            android.widget.ProgressBar progress = row.findViewById(R.id.epgRowProgress);
-
-            title.setText(titles.get(i));
-            String range = hasTimes
-                    ? fmt.format(new java.util.Date(start * 1000L)) + " – " + fmt.format(new java.util.Date(stop * 1000L))
-                    : "";
-            if (current) {
-                long left = Math.max(1L, (stop - nowSec + 59L) / 60L);
-                String remaining = left >= 60 ? (left / 60) + " h " + (left % 60) + " min" : left + " min";
-                time.setText(range + "  •  AO VIVO  •  faltam " + remaining);
-                time.setTextColor(0xFFF5D547);
-                row.setBackgroundResource(R.drawable.bg_epg_current);
-                progress.setProgress((int) (1000L * (nowSec - start) / (stop - start)));
-                progress.setVisibility(View.VISIBLE);
-            } else {
-                time.setText(range);
-            }
-            infoEpgList.addView(row);
+        for (int i = 0; i < lines.size(); i++) {
+            TextView line = (TextView) inflater.inflate(R.layout.item_epg_line, infoEpgList, false);
+            line.setText(lines.get(i));
+            if (i == 0 && firstIsCurrent) line.setTextColor(0xFFF5D547); // no ar agora
+            infoEpgList.addView(line);
         }
+    }
+
+    // ------------------------------------------------------------ Menu lateral extras
+
+    /** Rádio: abre a categoria de rádios da lista (se existir). */
+    private void openRadioCategory() {
+        for (int i = 0; i < categories.size(); i++) {
+            CategoryItem c = categories.get(i);
+            String n = java.text.Normalizer.normalize(c.name == null ? "" : c.name, java.text.Normalizer.Form.NFD)
+                    .toLowerCase(Locale.ROOT);
+            if (n.contains("radio")) {
+                selectCategoryInternal(c, i);
+                categoriesRecycler.scrollToPosition(i);
+                return;
+            }
+        }
+        Toast.makeText(this, "Nenhuma categoria de rádio nesta lista.", Toast.LENGTH_SHORT).show();
+    }
+
+    private void refreshContent() {
+        Intent i = new Intent(this, LoadingActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(i);
+        finish();
+    }
+
+    private void showProfile() {
+        String message = "Usuário: " + Prefs.username(this)
+                + "\nVencimento: " + Prefs.expiryDisplay(this)
+                + "\nID do aparelho: " + DeviceIdentity.get(this);
+        new AlertDialog.Builder(this)
+                .setTitle("Perfil")
+                .setMessage(message)
+                .setNegativeButton("Fechar", null)
+                .setPositiveButton("Trocar lista", (d, w) -> startActivity(new Intent(this, SettingsActivity.class)))
+                .show();
     }
 
     private void ensurePreviewPlayer() {
@@ -448,7 +514,7 @@ public class CatalogActivity extends BaseActivity {
 
         DefaultHttpDataSource.Factory httpFactory = new DefaultHttpDataSource.Factory()
                 .setUserAgent("Mozilla/5.0 (Linux; Android) AppleWebKit/537.36 AkiraTV/1.7.0")
-                .setAllowCrossProtocolRedirects(true)
+                .setAllowCrossProtocolRedirects(Prefs.allowCrossProtocol(this))
                 .setConnectTimeoutMs(12000)
                 .setReadTimeoutMs(25000);
         DefaultDataSource.Factory dataSourceFactory = new DefaultDataSource.Factory(this, httpFactory);
@@ -460,7 +526,14 @@ public class CatalogActivity extends BaseActivity {
         previewPlayer = new ExoPlayer.Builder(this)
                 .setMediaSourceFactory(mediaSourceFactory)
                 .setLoadControl(loadControl)
+                .setAudioAttributes(new androidx.media3.common.AudioAttributes.Builder()
+                        .setUsage(androidx.media3.common.C.USAGE_MEDIA)
+                        .setContentType(androidx.media3.common.C.AUDIO_CONTENT_TYPE_MOVIE)
+                        .build(), true)
                 .build();
+        // Preview leve: no máximo 720p (menos memória, banda e decodificador).
+        previewPlayer.setTrackSelectionParameters(previewPlayer.getTrackSelectionParameters()
+                .buildUpon().setMaxVideoSize(1280, 720).build());
         if (previewPlayerView != null) previewPlayerView.setPlayer(previewPlayer);
 
         previewPlayer.addListener(new Player.Listener() {
@@ -509,7 +582,7 @@ public class CatalogActivity extends BaseActivity {
         previewCandidateIndex = 0;
 
         if (liveAdapter != null) liveAdapter.setSelectedItem(item);
-        if (previewTitle != null) previewTitle.setText(item.name + " • " + LiveQualityUtil.qualityLabel(previewVariant.name));
+        if (previewTitle != null) previewTitle.setText(item.name);
         if (previewHint != null) {
             previewHint.setVisibility(View.VISIBLE);
             previewHint.setText("Carregando preview...");
@@ -517,6 +590,7 @@ public class CatalogActivity extends BaseActivity {
         if (previewInstruction != null) previewInstruction.setText("Aguarde o preview carregar • depois pressione OK para tela cheia");
         updatePreviewFavoriteButton();
         updatePreviewQualityButton();
+        loadEpg(item);
 
         if (previewCandidates.isEmpty()) {
             if (previewHint != null) previewHint.setText("Preview indisponível");
@@ -690,6 +764,8 @@ public class CatalogActivity extends BaseActivity {
 
     private void openLiveFullScreen(ContentItem item) {
         pendingRestoreKey = item.key();
+        previewItem = item;           // ao voltar, este canal volta a tocar no preview
+        stopPreviewPlayback(true);    // libera a conexão antes do player abrir o canal
         ContentNavigator.open(this, item);
     }
 
@@ -958,7 +1034,6 @@ public class CatalogActivity extends BaseActivity {
         pendingFilterRunnable = () -> {
             pendingFilterRunnable = null;
             applyFilter();
-            if ("live".equals(type)) clearPreview();
         };
         previewHandler.postDelayed(pendingFilterRunnable, 140L);
     }
@@ -979,7 +1054,6 @@ public class CatalogActivity extends BaseActivity {
         categoryAdapter.setSelected(category.id);
         selectedCategoryTitle.setText(cleanCategoryName(category.name));
         applyFilter();
-        if (changed && "live".equals(type)) clearPreview();
     }
 
     private void requestAdultPin(CategoryItem category, int position) {
@@ -1033,7 +1107,6 @@ public class CatalogActivity extends BaseActivity {
         if (contentRecycler != null) contentRecycler.scrollToPosition(0);
         updateStatus();
 
-        if ("live".equals(type) && previewItem != null && !containsShown(previewItem)) clearPreview();
     }
 
     private boolean containsShown(ContentItem target) {

@@ -63,10 +63,28 @@
             android:textSize="11sp" />
     </LinearLayout>
 
+    <!-- Qualidade lida do nome do canal: SD, HD, FHD ou 4K. -->
+    <TextView
+        android:id="@+id/rowQuality"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:background="@drawable/bg_quality_chip"
+        android:fontFamily="sans-serif-medium"
+        android:paddingStart="6dp"
+        android:paddingTop="1dp"
+        android:paddingEnd="6dp"
+        android:paddingBottom="1dp"
+        android:text="HD"
+        android:textColor="#AAB4C3"
+        android:textSize="10sp"
+        android:visibility="gone" />
+
     <!-- Azul = canal selecionado / em foco. Transparente nos demais. -->
     <ImageView
         android:layout_width="22dp"
         android:layout_height="22dp"
+        android:layout_marginStart="8dp"
         android:duplicateParentState="true"
         android:importantForAccessibility="no"
         android:src="@drawable/ic_radio"

@@ -66,6 +66,14 @@ public class CatalogContentAdapter extends RecyclerView.Adapter<CatalogContentAd
         h.boundKey = item.key();
         h.number.setText(String.valueOf(position + 1));
         h.name.setText(item.name);
+        String quality = qualityTag(item.name);
+        if (quality.isEmpty()) {
+            h.quality.setVisibility(View.GONE);
+        } else {
+            h.quality.setText(quality);
+            h.quality.setTextColor(qualityColor(quality));
+            h.quality.setVisibility(View.VISIBLE);
+        }
         h.itemView.setSelected(selectedKey.equals(item.key()));
 
         // "O que está passando": usa o cache e, se faltar, pede (só enquanto o item estiver na tela).
@@ -117,11 +125,32 @@ public class CatalogContentAdapter extends RecyclerView.Adapter<CatalogContentAd
     @Override
     public int getItemCount() { return items.size(); }
 
+    /** Qualidade lida do nome do canal (4K, FHD, HD ou SD); vazio se o nome não diz. */
+    static String qualityTag(String name) {
+        if (name == null) return "";
+        String n = name.toUpperCase(java.util.Locale.ROOT);
+        if (java.util.regex.Pattern.compile("\\b(4K|UHD)\\b").matcher(n).find()) return "4K";
+        if (java.util.regex.Pattern.compile("\\b(FHD|FULL ?HD)\\b").matcher(n).find()) return "FHD";
+        if (java.util.regex.Pattern.compile("\\bHD\\b").matcher(n).find()) return "HD";
+        if (java.util.regex.Pattern.compile("\\bSD\\b").matcher(n).find()) return "SD";
+        return "";
+    }
+
+    private static int qualityColor(String tag) {
+        switch (tag) {
+            case "4K": return 0xFFF5D547;
+            case "FHD": return 0xFF3AA8FF;
+            case "HD": return 0xFFDDE4F0;
+            default: return 0xFF8F9BB3;
+        }
+    }
+
     static class Holder extends RecyclerView.ViewHolder {
         final TextView number;
         final TextView name;
         final TextView meta;
         final ImageView icon;
+        final TextView quality;
         String boundKey = "";
 
         Holder(View view) {
@@ -130,6 +159,7 @@ public class CatalogContentAdapter extends RecyclerView.Adapter<CatalogContentAd
             name = view.findViewById(R.id.rowName);
             meta = view.findViewById(R.id.rowMeta);
             icon = view.findViewById(R.id.rowIcon);
+            quality = view.findViewById(R.id.rowQuality);
         }
     }
 }
